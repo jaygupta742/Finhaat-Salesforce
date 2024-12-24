@@ -1,0 +1,296 @@
+<!-- 
+ * @Created By   : Vishal Singh 
+ * @Created Date : 29-08-2024
+ * @Description  : Need to create a LWC component to create account, contact and opportunity form List view button on account 
+
+   @Last Modified by		: vishal singh
+   @Last Modified Date      : 30-08-2024
+   @Description             : 1 Need to add the address fields on account section done
+                            : 2 add required on contact according to production done
+                            : 3 save button should be on the top at the right side of the page done
+  -->
+<template>
+    <div class="slds-modal__header">
+        <h1 class="slds-modal__title" style="font-weight: bold; font-size: 20px;">Create Account, Contact & Opportunity</h1>
+        <div  style="text-align:right;">
+            <lightning-button variant="brand" class="slds-m-right_x-small" label="Save" onclick={saveit} disabled={saveStatus}></lightning-button>
+    
+            <lightning-button variant="neutral" label="Cancel" onclick={cancelit}></lightning-button>
+        </div>
+    </div>
+
+    <div class="slds-modal__content">
+        <div class="" style="max-height: 570px;">
+            <div class="exampleHolder" if:true={showSpinner}>
+                <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+            </div>
+            <div if:false={showSpinner}>
+                <div class="slds-section slds-is-open">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-3 slds-p-around_x-small">
+                            <div class="slds-box slds-theme_default" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #B0C4DE;">
+                                <span>
+                                    <div class="slds-modal__header slds-align_absolute-center" style="display:flex;gap:12px;">
+                                        <lightning-icon icon-name="standard:account" alternative-text="account" size="small" title="account"></lightning-icon>
+                                        <p class="slds-modal__title" style="font-weight: bold; font-size:15px;">Account Detail</p>
+                                    </div>
+
+                                    <lightning-record-edit-form object-api-name="Account" density="comfy">
+                                        <lightning-layout multiple-rows="true" class="slds-p-top_x-small">
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field class="nameVal"  field-name="Name" value={acc.Name} onchange={setAccountValues} required ></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Phone" value={acc.Phone} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="PAN_No__c" value={acc.PAN_No__c} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> 
+
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Type_Of_Store__c" value={acc.Type_Of_Store__c} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="DDM3__PAN__c" value={acc.DDM3__PAN__c} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+
+                                            <template if:true={showTypeOfStoreOther}>
+                                                <lightning-layout-item size="6" padding="horizontal-small">
+                                                    <lightning-input-field field-name="Type_Of_Store_Other__c" value={acc.Type_Of_Store_Other__c} onchange={setAccountValues}></lightning-input-field>
+                                                </lightning-layout-item>
+                                            </template>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Website" value={acc.Website} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="GST_No__c" value={acc.GST_No__c} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="AnnualRevenue" value={acc.AnnualRevenue} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            
+                                        </lightning-layout>
+                                        
+                                        
+                                        <hr style="border: 1px solid #d8dde6; margin: 16px 0;">
+
+
+                                      
+                                        <lightning-layout multiple-rows="true" class="slds-p-top_x-small">
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="ShippingStreet" value={acc.ShippingStreet} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="BillingStreet" value={acc.BillingStreet} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+                                            
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="ShippingCity" value={acc.ShippingCity} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="BillingCity" value={acc.BillingCity} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="ShippingState" value={acc.ShippingState} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="BillingState" value={acc.BillingState} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="ShippingPostalCode" value={acc.ShippingPostalCode} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="BillingPostalCode" value={acc.BillingPostalCode} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="ShippingCountry" value={acc.ShippingCountry} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="BillingCountry" value={acc.BillingCountry} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Description" value={acc.Description} onchange={setAccountValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+
+                                        <hr style="border: 1px solid #d8dde6; margin: 16px 0;">
+
+                                        <lightning-layout multiple-rows="true" class="slds-p-top_x-small">
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Total_Loan_Clients__c" value={acc.Total_Loan_Clients__c} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Present_Insurance_Offerring__c" value={acc.Present_Insurance_Offerring__c} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Total_Depositors__c" value={acc.Total_Depositors__c} onchange={setAccountValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                        </lightning-layout>
+                                       
+                                    </lightning-record-edit-form>
+                                    
+                                </span>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 slds-p-around_x-small">
+                            <div class="slds-box slds-theme_default" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #B0C4DE;">
+                                <span>
+                                    <div class="slds-modal__header slds-align_absolute-center" style="display:flex;gap:12px;">
+                                        <lightning-icon icon-name="standard:contact" alternative-text="contact" size="small" title="contact"></lightning-icon>
+                                        <p class="slds-modal__title" style="font-weight: bold; font-size:15px;">Contact Information</p>
+                                    </div>
+
+                                    <lightning-record-edit-form object-api-name="Contact" density="comfy">
+                                        <lightning-layout multiple-rows="true" class="slds-p-top_x-small">
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Salutation" value={con.Salutation} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Email" value={con.Email} onchange={setContactValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="FirstName" value={con.FirstName} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="MobilePhone" value={con.MobilePhone} onchange={setContactValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="LastName" value={con.LastName} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="WhatsApp_No__c" value={con.WhatsApp_No__c} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <!-- <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Phone" value={con.Phone} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item> -->
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Title" value={con.Title} onchange={setContactValues} required></lightning-input-field>
+                                            </lightning-layout-item>
+                                            
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Department" value={con.Department} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <!--lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Location__c" value={con.Location__c} onchange={setContactValues}></lightning-input-field>
+                                            </lightning-layout-item-->
+                                        </lightning-layout>
+                                    </lightning-record-edit-form>
+                                </span>
+                            </div><br/>
+                            <!--
+                             <div class="slds-box slds-theme_default" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #B0C4DE;">
+                                <span>
+                                    <div class="slds-modal__header slds-align_absolute-center" style="display:flex;gap:12px;">
+                                        <lightning-icon icon-name="standard:location" alternative-text="opportunity" size="small" title="opportunity"></lightning-icon>
+                                        <p class="slds-modal__title" style="font-weight: bold; font-size:15px;">Location Information</p>
+                                    </div>
+
+                                     <lightning-record-edit-form object-api-name="Location__c" density="comfy">
+                                         <lightning-layout multiple-rows="true" class="slds-p-top_x-small">
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Name" value={loc.Name} onchange={setlocationValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Address__c" value={loc.Address__c} onchange={setlocationValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="State__c" value={loc.State__c} onchange={setlocationValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="City__c" value={loc.City__c} onchange={setlocationValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Zipcode_Pincode__c" value={loc.Zipcode_Pincode__c} onchange={setlocationValues}></lightning-input-field>
+                                            </lightning-layout-item>
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Country__c" value={loc.Country__c} onchange={setlocationValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            
+                                         </lightning-layout>
+                                    </lightning-record-edit-form> 
+                                </span>
+                            </div>-->
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 slds-p-around_x-small">
+                            <div class="slds-box slds-theme_default" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #B0C4DE;">
+                                <span>
+                                    <div class="slds-modal__header slds-align_absolute-center" style="display:flex;gap:12px;">
+                                        <lightning-icon icon-name="standard:opportunity" alternative-text="opportunity" size="small" title="opportunity"></lightning-icon>
+                                        <p class="slds-modal__title" style="font-weight: bold; font-size:15px;">Opportunity Information</p>
+                                    </div>
+
+                                    <lightning-record-edit-form object-api-name="Opportunity" density="comfy">
+                                        <lightning-layout multiple-rows="true" class="slds-p-top_x-small">
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Name" value={opp.Name} onchange={setOpportunityValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="StageName" value={opp.StageName} onchange={setOpportunityValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Insurer_Name__c" value={opp.Insurer_Name__c} onchange={setOpportunityValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Product_Name__c" value={opp.Product_Name__c} onchange={setOpportunityValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="CloseDate" value={opp.CloseDate} onchange={setOpportunityValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                            <lightning-layout-item size="6" padding="horizontal-small">
+                                                <lightning-input-field field-name="Amount" value={opp.Amount} onchange={setOpportunityValues}></lightning-input-field>
+                                            </lightning-layout-item>
+
+                                        </lightning-layout>
+                                    </lightning-record-edit-form>
+                                </span>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                    
+                </div><br/><br/>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- <div class="slds-modal__footer" style="text-align:center;">
+        <lightning-button variant="brand" class="slds-m-right_x-small" label="Save" onclick={saveit} disabled={saveStatus}></lightning-button>
+
+        <lightning-button variant="neutral" label="Cancel" onclick={cancelit}></lightning-button>
+    </div> -->
+</template>

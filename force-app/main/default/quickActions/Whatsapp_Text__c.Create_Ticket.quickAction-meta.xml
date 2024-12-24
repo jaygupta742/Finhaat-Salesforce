@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldOverrides>
+        <field>Account__c</field>
+        <formula>Whatsapp_Text__c.Account__c</formula>
+    </fieldOverrides>
+    <fieldOverrides>
+        <field>Stage__c</field>
+        <literalValue>Ticket Raised</literalValue>
+    </fieldOverrides>
+    <fieldOverrides>
+        <field>text__c</field>
+        <formula>Whatsapp_Text__c.Text__c</formula>
+    </fieldOverrides>
+    <label>New Ticket</label>
+    <optionsCreateFeedItem>true</optionsCreateFeedItem>
+    <quickActionLayout>
+        <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Whatsapp_Text__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Stage__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>text__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Priority__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+    </quickActionLayout>
+    <successMessage>Ticket Created Successfully !!!</successMessage>
+    <targetObject>Ticket__c</targetObject>
+    <targetParentField>Whatsapp_Text__c</targetParentField>
+    <type>Create</type>
+</QuickAction>

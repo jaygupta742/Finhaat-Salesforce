@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Ticket</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Ticket</value>
+    </caseValues>
+    <layouts>
+        <layout>Complain Ticket Layout</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Client&apos;s Details --></label>
+            <section>Client&apos;s Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Ticket Details --></label>
+            <section>Ticket Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Sales and Ops</layout>
+        <sections>
+            <label><!-- Client&apos;s Details --></label>
+            <section>Client&apos;s Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- In Progress Details --></label>
+            <section>In Progress Details</section>
+        </sections>
+        <sections>
+            <label><!-- Ticket Details --></label>
+            <section>Ticket Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Ticket Layout</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Client&apos;s Details --></label>
+            <section>Client&apos;s Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Last Task Details --></label>
+            <section>Last Task Details</section>
+        </sections>
+        <sections>
+            <label><!-- Ticket Details --></label>
+            <section>Ticket Details</section>
+        </sections>
+        <sections>
+            <label><!-- Ticket Stage Age --></label>
+            <section>Ticket Stage Age</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- In-progress --></label>
+        <name>In_progress</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Notify Ops --></label>
+        <name>Notify_Ops</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Notify Sales --></label>
+        <name>Notify_Ticket</name>
+    </quickActions>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

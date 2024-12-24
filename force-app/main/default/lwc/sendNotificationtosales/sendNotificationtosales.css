@@ -1,0 +1,34 @@
+.slds-modal__header {
+    border-bottom: 1px solid #d8dde6;
+    padding-bottom: 0.5rem;
+}
+
+.slds-modal__content {
+    padding: 1rem;
+}
+
+.slds-modal__footer {
+    border-top: 1px solid #d8dde6;
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.warning-header {
+    background-color: #ffffff; /* Warning yellow background */
+    color: #333333; /* Dark text color for contrast */
+    border-top-left-radius: 10px; /* Optional: rounded corners */
+    border-top-right-radius: 10px; /* Optional: rounded corners */
+}
+
+.custom-alert-background .slds-modal__container {
+    border-radius: 10px; /* Optional: rounded corners */
+}
+
+.custom-backdrop {
+    background-color: rgba(0, 0, 0, 0.07); /* Darker backdrop */
+}
+
+.custom-textarea {
+    --sds-c-textarea-sizing-min-height:125px;
+}

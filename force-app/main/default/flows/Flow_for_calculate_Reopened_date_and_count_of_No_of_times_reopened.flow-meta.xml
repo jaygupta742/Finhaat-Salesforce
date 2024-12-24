@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <assignments>
+        <name>Assign_zero_if_null</name>
+        <label>Assign zero if null</label>
+        <locationX>133</locationX>
+        <locationY>311</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.No_of_times_Reopened__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Record</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Check_No_Of_times_field_is_not_null</name>
+        <label>Check No Of times field is not null</label>
+        <locationX>288</locationX>
+        <locationY>158</locationY>
+        <defaultConnector>
+            <targetReference>Assign_zero_if_null</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Is_not_null</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.No_of_times_Reopened__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Record</targetReference>
+            </connector>
+            <label>Is not null</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>CurrentDateTime</name>
+        <dataType>DateTime</dataType>
+        <expression>{!$Flow.CurrentDateTime}</expression>
+    </formulas>
+    <formulas>
+        <name>NoOofTimesReopened</name>
+        <dataType>Number</dataType>
+        <expression>{!$Record.No_of_times_Reopened__c} + 1</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Flow for calculate Reopened date and count of No. of times reopened {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Flow for calculate Reopened date and count of No. of times reopened</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Record</name>
+        <label>Update Record</label>
+        <locationX>451</locationX>
+        <locationY>411</locationY>
+        <inputAssignments>
+            <field>Last_Reopened_Date_and_time__c</field>
+            <value>
+                <elementReference>CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>No_of_times_Reopened__c</field>
+            <value>
+                <elementReference>NoOofTimesReopened</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>502</locationX>
+        <locationY>27</locationY>
+        <connector>
+            <targetReference>Check_No_Of_times_field_is_not_null</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Stage__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Reopened</stringValue>
+            </value>
+        </filters>
+        <object>Ticket__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

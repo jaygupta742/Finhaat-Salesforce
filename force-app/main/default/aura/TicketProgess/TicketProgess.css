@@ -1,0 +1,9 @@
+.THIS .image-container {
+    text-align: center; /* Center the image */
+    margin-bottom: 10px;
+}
+
+.THIS .image-style {
+    width: 35%;  /* Adjust the width of the image */
+    height: 35%; /* Keep the aspect ratio */
+}

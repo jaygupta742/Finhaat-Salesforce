@@ -1,0 +1,14 @@
+.custom-container{
+	color : black;
+}
+
+.attachment-container {
+    margin-left: 20px;
+    border: 1px solid #ccc; /* Change color and style as needed */
+    padding: 10px; /* Optional padding */
+    border-radius: 4px; /* Optional rounded corners */
+}
+
+.slds-box {
+    border: 1px solid #ccc; /* Optional: adjust border color */
+}

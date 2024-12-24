@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>Share_to_POS_ops_Users</fullName>
+        <accessLevel>Edit</accessLevel>
+        <description>Raised Ticket Sharing to POS ops user</description>
+        <label>Share to POS ops Users</label>
+        <sharedTo>
+            <group>POS_Ops_Users</group>
+        </sharedTo>
+        <criteriaItems>
+            <field>Stage__c</field>
+            <operation>equals</operation>
+            <value>Created,Req For Policy,In Progress,Req For Payment Link</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>true</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+    <sharingCriteriaRules>
+        <fullName>Share_to_POS_ops_Users_Read_Only</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>Share to POS ops Users Read Only</label>
+        <sharedTo>
+            <group>POS_Ops_Users</group>
+        </sharedTo>
+        <criteriaItems>
+            <field>Stage__c</field>
+            <operation>equals</operation>
+            <value>Policy Issued,Quote Sent,Payment Link Sent</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>true</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+</SharingRules>

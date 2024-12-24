@@ -1,0 +1,170 @@
+<apex:page controller="RCPhoneHelper">
+     <style>
+        .hasMotif {
+            margin: 0px;
+        }
+    </style>
+    <apex:iframe src="https://iframe.telecmi.com/salesforce" height="500" width="297" frameborder="false" />
+     <script src="/support/api/58.0/lightning/opencti_min.js" type="text/javascript"></script>
+      <script>
+          // Click-to-Dial
+        function postMessage(data) {
+          document.getElementsByTagName('iframe')[0].contentWindow.postMessage(data, 'https://iframe.telecmi.com');
+        }
+        sforce.opencti.enableClickToDial();
+        sforce.opencti.onClickToDial({
+            listener: function(result) {
+                postMessage({
+                    type: 'telecmi_c2c',
+                    phoneNumber: result.number,
+                    toCall: true,
+                });
+                sforce.opencti.setSoftphonePanelVisibility({
+                    visible: true
+                });
+            }
+        });
+    
+    
+    function receiveMessage(event) {
+        
+            if (event.data.type === 'telecmi_inbound') { // Inbound Screen Pop
+                
+                sforce.opencti.setSoftphonePanelVisibility({
+                    visible: true
+                });
+                var fromNumber = event.data.from;
+                if (fromNumber) {
+                    fromNumber = parseInt(fromNumber);
+                }
+
+                
+                sforce.opencti.runApex({
+                    apexClass: 'RCPhoneHelper',
+                    methodName: 'searchContact',
+                    methodParams: 'phone=' + fromNumber,
+                    callback: function(response) {
+                        if ((response.success == true)&&(response.returnValue.runApex)) {
+                            var contactId = response.returnValue.runApex.Id;
+                            if (contactId !== null) {
+                                sforce.opencti.screenPop({
+                                    type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
+                                    params: {
+                                        recordId: contactId
+                                    }
+                                });
+                            }
+                            
+                        }else{
+                      
+                            
+                  
+                                
+                                sforce.opencti.runApex({
+                                   apexClass: 'RCPhoneHelper',
+                                   methodName: 'addContact',
+                                   methodParams: 'phone=' + fromNumber,
+                                   callback: function(response) {
+                                       
+                                       if ((response.success == true)&&(response.returnValue.runApex)) {
+                            var contactId = response.returnValue.runApex.Id;
+                            if (contactId !== null) {
+                                sforce.opencti.screenPop({
+                                    type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
+                                    params: {
+                                        recordId: contactId
+                                    }
+                                });
+                            }
+                            
+                        }   
+                                    }            
+                        });   
+                      }
+                    }
+                });
+            } else if (event.data.type === 'telecmi_callLog') { // Call Logging
+                
+                if (event.data.cdr.time) {
+            
+                    if(event.data.cdr.direction=='inbound'){
+                        fromNumber = event.data.cdr.from;
+                     }else{
+                         fromNumber = event.data.cdr.to;
+                     }
+                   
+                    
+                     if (fromNumber) {
+                         fromNumber = parseInt(fromNumber);
+                     }
+                    sforce.opencti.runApex({
+                        apexClass: 'RCPhoneHelper',
+                        methodName: 'searchContact',
+                        methodParams: 'phone=' + fromNumber,
+                        callback: function(response) {
+                            if (response.success == true) {
+                                
+                                var contactId = response?.returnValue?.runApex?.Id || null;
+                                
+                                if (contactId !== null) {
+                                    
+                                   var cmi_name = response.returnValue.runApex.Name || '';
+                                    //handling outbound call
+                                    if(event.data.cdr.direction=='outbound'){
+                                    var cmi_status =((event.data.cdr.status=='answered')?'Completed':'Missed')
+                                    var cmi_duration=event.data.cdr.answeredsec;
+                                        if(cmi_status=='Missed'){
+                                            cmi_duration=0;
+                                         }
+                                    
+                                    sforce.opencti.runApex({
+                                        apexClass: 'RCPhoneHelper',
+                                        methodName: 'logACall',
+                                        methodParams: 'contactId=' + contactId +
+                                            '&duration=' + cmi_duration +
+                                            '&fromNumber=' + event.data.cdr.virtual_number +
+                                            '&toNumber=' + event.data.cdr.to +
+                                             '&callStatus=' + cmi_status +
+                                             '&clientName='+cmi_name,
+                                        callback: function(rr) {
+                                            
+                                           
+                                        }
+                                    });
+                                        }
+                                    
+                                     //handling inbound call
+                                    if(event.data.cdr.direction=='inbound'){
+                                    var cmi_status =((event.data.cdr.status=='answered')?'Completed':'Missed')
+                                    var cmi_duration=event.data.cdr.answeredsec;
+                                        if(cmi_status=='Missed'){
+                                            cmi_duration=0;
+                                         }
+                                        
+                                        sforce.opencti.runApex({
+                                        apexClass: 'RCPhoneHelper',
+                                        methodName: 'logInCall',
+                                        methodParams: 'contactId=' + contactId +
+                                            '&duration=' + cmi_duration +
+                                            '&fromNumber=' + event.data.cdr.from +
+                                            '&toNumber=' + event.data.cdr.to +
+                                             '&callStatus=' + cmi_status +
+                                             '&clientName='+cmi_name,
+                                        callback: function(rr) {
+                                            
+                                        }
+                                    });
+                                    
+                                        }
+                                    
+                                    
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        window.addEventListener("message", receiveMessage, false);
+     </script>
+</apex:page>

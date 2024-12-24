@@ -1,0 +1,160 @@
+<!-- 
+  @description       : Need to create Task Under the Ticket object...
+  @author            : Vishal Singh
+  @Created Date On   : 24-08-2024
+
+
+  @Last Modified by    : vishal singh 
+  @Last MOdified Date  : 27-08-2024
+  @Description         :1. Priority should be by default Normal, 
+                       :2. Due Date should be by default today's Date 
+                       :3. when Task create from Notify Ops the it should redirect to the related ticket 
+                       :4. Need to reduce the component 
+                       :5. Notify Ops Button should only be seen to whose profile name is not equal to POS Ops 
+
+ @Last Modified by    : vishal singh 
+  @Last MOdified Date  : 27-08-2024
+  @Description         1. Title of the Notification should be Subject of the Task when we create the new task and if we update the status as completed then title of the task should be Task Completed
+                       2. Body of the Notification should be comment of the task when we create the new task and if we update the status as completed then the body of the task should task's subject 
+                       3. Subject should be mandatory on component  
+  
+  Last modified by: Sougata Paul; Last modified date: 03/08/2024; Des : Error in Show alert message Rectified
+ -->
+ 
+<template>
+    <lightning-modal-header label="Create New Task">
+    </lightning-modal-header>
+    <lightning-modal-body >
+            <!--lightning-input
+                label="Subject"
+                placeholder="Enter a subject"
+                value={value}
+                onchange={handleInputChange}
+                required>
+            </lightning-input-->
+           
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="combobox-id-12" id="combobox-label-id-136">Subject</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-combobox_container">
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                <input type="text" class="slds-input slds-combobox__input " id="combobox-id-12"
+                                    aria-autocomplete="list" aria-controls="listbox-id-10" aria-expanded="true"
+                                    aria-haspopup="listbox" autocomplete="off" role="combobox" placeholder="Search..."
+                                    oninput={handleInputtChange} value={optionValue} onmousedown={handleMouseDown} required label="Subject"></input>
+                                <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                                    <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <template if:true={showDropdown}>
+                                <div id="listbox-id-10" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox" tabindex="0" aria-busy="false">
+                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                        <template for:each={filteredOptions} for:item="option">
+                                            <li key={option.id} role="presentation" class="slds-listbox__item" data-id={option.id} onclick={handleOptionClick}>
+                                                <div id={option.id} class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                                    <span class="slds-media__figure slds-listbox__option-icon"></span>
+                                                    <span class="slds-media__body">
+                                                        <span class="slds-truncate" title={option.label}>{option.label}</span>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<lightning-textarea label="Comments"  onchange={handleInputChange} data-id="Comments"> </lightning-textarea>
+
+<lightning-combobox
+    label="Priority"
+    value={task.Priority}
+    options={PriorityOptions}
+    onchange={handleInputChange} >
+</lightning-combobox>
+
+<lightning-input label="Due Date" value={task.DueDate}  type="date" onchange={handleInputChange} data-id="ActivityDate"></lightning-input>
+
+    <div style="display:flex;">
+        <lightning-combobox
+            label="Assigned To" style="width:30%;"
+            value={selectedtypeValue1}
+            options={sobjectType}
+            onchange={handleSelectType}
+        ></lightning-combobox>
+        <div class="slds-p-top_xx-small" style="width:100%;">
+                <lightning-combobox
+                    style="width:100%;"
+                    value={selectedttValue}
+                    options={optionsQueue}
+                    onchange={handlequeuChange}
+                ></lightning-combobox>    
+        </div>     
+          
+    </div>
+	
+
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button variant="brand" class="slds-m-right_x-small" label="Save" onclick={saveit}
+        disabled={saveStatus}></lightning-button>
+            <lightning-button variant="neutral" label="Cancel" onclick={cancelit}></lightning-button>
+    </lightning-modal-footer>
+
+    
+    <!-- <template if:true={isShowModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+         
+           <header class="slds-modal__header">
+              <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                 <lightning-icon icon-name="utility:close"
+                    alternative-text="close"
+                    variant="inverse"
+                    size="small" ></lightning-icon>
+                 <span class="slds-assistive-text">Close</span>
+              </button>
+              <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create New Task</h2>
+           </header>
+       
+           <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+               
+            <lightning-input
+            label="Subject"
+            placeholder="Enter a subject"
+            value={value}
+            onchange={handleInputChange}>
+    </lightning-input>
+
+   
+
+    <lightning-textarea label="Comments"  onchange={handleInputChange} data-id="Comments"> </lightning-textarea>
+
+    <lightning-combobox
+        label="Priority"
+        value={task.Priority}
+        options={PriorityOptions}
+        onchange={handleInputChange} >
+    </lightning-combobox>
+
+    <lightning-input label="Due Date" value={task.DueDate}  type="date" onchange={handleInputChange} data-id="ActivityDate"></lightning-input>
+
+           </div>
+ 
+           
+           <footer class="slds-modal__footer">
+            <lightning-button variant="brand" class="slds-m-right_x-small" label="Save" onclick={saveit}
+            disabled={saveStatus}></lightning-button>
+                <lightning-button variant="neutral" label="Cancel" onclick={cancelit}></lightning-button>
+           </footer>
+        
+        </div>
+     </section>
+    </template> -->
+</template>
