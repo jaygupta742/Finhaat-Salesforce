@@ -1,162 +1,190 @@
-/* Created date : 29/02/2024 , Created date by : Suraj , description ,  Inbound Whatsapp Notification 
-* Last Modified  date : 01/03/2024 , Last Modified date by : Suraj , description ,  Need to change response body for incoming Whats app text 
-* Last Modified  date : 11/03/2024 , Last Modified date by : Suraj , description , need to add format with KeyWord for create tickets 
-Last Modified  date : 14/03/2024 , Last Modified date by : Suraj , description , need to Modify for if document is come then it should be insert in whatsapp text as an attachements
-Last Modified  date : 11/06/2024 , Last Modified date by : Suraj , description , need to Modify for if document is come then it should be insert in whatsapp text as an attachements  for student
-Last Modified  date : 12/06/2024 , Last Modified date by : Suraj , description ,  While creating ticket , need to capture whatsapp text in ticket 
-Last Modified  date : 26/07/2024 , Last Modified date by : Suraj , description ,  Need to do if accout not found from coming Whatsapp No then Whatsapp text should create for Incoming Notification
-*/  
-@RestResource(urlMapping='/Restapi_Inbound_sms/*')
+/* Created date : 29/02/2024 , Created date by : Suraj , description ,  Inbound Whatsapp Notification
+ * Last Modified  date : 01/03/2024 , Last Modified date by : Suraj , description ,  Need to change response body for incoming Whats app text
+ * Last Modified  date : 11/03/2024 , Last Modified date by : Suraj , description , need to add format with KeyWord for create tickets
+ Last Modified  date : 14/03/2024 , Last Modified date by : Suraj , description , need to Modify for if document is come then it should be insert in whatsapp text as an attachements
+ Last Modified  date : 11/06/2024 , Last Modified date by : Suraj , description , need to Modify for if document is come then it should be insert in whatsapp text as an attachements  for student
+ Last Modified  date : 12/06/2024 , Last Modified date by : Suraj , description ,  While creating ticket , need to capture whatsapp text in ticket
+ Last Modified  date : 26/07/2024 , Last Modified date by : Suraj , description ,  Need to do if accout not found from coming Whatsapp No then Whatsapp text should create for Incoming Notification
+ */
+@RestResource(urlMapping = '/Restapi_Inbound_sms/*')
 Global without sharing class Restapi_Inbound_sms{
     @HttpPost
     Global static String doPost(){
-        String accesstoken ;
-     //   system.debug('The Body is = '+RestContext.request.requestBody.toString());
+        String accesstoken;
+        //   system.debug('The Body is = '+RestContext.request.requestBody.toString());
         String jsonbody = RestContext.request.requestBody.toString();
         //     fromJSON f = fromJSON.parse(jsonbody);
-        Map<String, Object> get_Res = (MAp<String , Object>)JSON.deserializeUntyped(jsonbody);
-        system.debug('The remoteJid is '+ get_Res.get('remoteJid'));
-        system.debug('type'+ get_Res.get('type'));
-        system.debug('text '+ get_Res.get('text'));
-        string return_type='';
-        string check_content ;
+        Map<String, Object> get_Res = (MAp<String, Object>)JSON.deserializeUntyped(jsonbody);
+        system.debug('The remoteJid is ' + get_Res.get('remoteJid'));
+        system.debug('type' + get_Res.get('type'));
+        system.debug('text ' + get_Res.get('text'));
+        string return_type = '';
+        string check_content;
         try{
-            if(get_Res.get('remoteJid') != ''){
-                String phoneNumber = extractNumber((string)get_Res.get('remoteJid'));
-              //  system.debug('phoneNumber '+phoneNumber);
-                Account acc=New Account();
+            if ( get_Res.get('remoteJid') != '' ){
+                String phoneNumber = extractNumber((string) get_Res.get('remoteJid'));
+                //  system.debug('phoneNumber '+phoneNumber);
+                Account acc = New Account();
                 try{
                     //system.debug('phoneNumber  with 91 '+phoneNumber);
-                    acc=[Select id ,Name , WhatsApp_No__c,ownerId from Account where WhatsApp_No__c Like: '%'+phoneNumber+'%' and (Recordtype.Name =:'POS' OR Recordtype.Name =:'FW Investor' OR Recordtype.Name =:'FW Partner') limit 1];
-                    return_type ='Success';  
+                    acc = [Select id, Name, WhatsApp_No__c, ownerId
+                           from Account
+                           where WhatsApp_No__c Like:'%' + phoneNumber + '%' and (Recordtype.Name = :'POS' OR Recordtype.Name = :'FW Investor' OR Recordtype.Name = :'FW Partner')
+                           limit 1];
+                    return_type = 'Success';
+                } catch ( exception e ){
+                    phoneNumber = phoneNumber.substring(phoneNumber.length() - 10);
+                    // system.debug('phoneNumber  without 91 '+phoneNumber);
+                    try{
+                        acc = [Select id, Name, WhatsApp_No__c, ownerId
+                               from Account
+                               where WhatsApp_No__c Like:'%' + phoneNumber + '%' and (Recordtype.Name = :'POS' OR Recordtype.Name = :'FW Investor' OR Recordtype.Name = :'FW Partner')
+                               limit 1];
+                        return_type = 'Success';
+                    } catch ( exception ex ){
+                        return_type = 'Account not found, And Whatsapp text created successfuly..!!';
+                    }
                 }
-                catch(exception e){
-                    phoneNumber =phoneNumber.substring(phoneNumber.length() - 10); 
-                   // system.debug('phoneNumber  without 91 '+phoneNumber);
-                   try{ 
-                        acc=[Select id ,Name, WhatsApp_No__c , ownerId from Account where WhatsApp_No__c Like: '%'+phoneNumber+'%' and (Recordtype.Name =:'POS' OR Recordtype.Name =:'FW Investor' OR Recordtype.Name =:'FW Partner') limit 1];
-                         return_type ='Success'; 
-                   }
-                   catch(exception ex){
-                      return_type = 'Account not found, And Whatsapp text created successfuly..!!';
-                     }
-                }
- 
-                system.debug(' Account Name '+acc.Name);
-               
-                String textmsg = (get_Res.get('text') == null || get_Res.get('text') == '')?'':(string)get_Res.get('text');
-                
+
+                system.debug(' Account Name ' + acc.Name);
+
+                String textmsg = (get_Res.get('text') == null || get_Res.get('text') == '') ? '' : (string) get_Res.get('text');
+
                 //   message_cls message =F.message_cls;
-                Whatsapp_Text__c aa=New Whatsapp_Text__c();
-                //   aa.Delivery_Status__c = 'Sent';         
+                Whatsapp_Text__c aa = New Whatsapp_Text__c();
+                //   aa.Delivery_Status__c = 'Sent';
                 aa.Msg_Sent__c = false;
                 // aa.Message_Id__c = f.key.id;
-                aa.Message_Type__c ='Incoming';
-                system.debug('get msg type '+get_Res.get('type'));
-                if(get_Res.get('type') == 'text'){
-                    aa.Text__c =textmsg;
+                aa.Message_Type__c = 'Incoming';
+                system.debug('get msg type ' + get_Res.get('type'));
+                if ( get_Res.get('type') == 'text' ){
+                    aa.Text__c = textmsg;
+                } else{
+                    aa.Text__c = (string) get_Res.get('type');
                 }
-                else {
-                    aa.Text__c =(string)get_Res.get('type');  
-                }
-                
+
                 aa.user__c = acc.OwnerId;
                 aa.Account__c = acc.id;
-                if(acc.OwnerId != null){
+                if ( acc.OwnerId != null ){
                     aa.OwnerId = acc.OwnerId;
                 }
                 aa.Sent_To__c = phoneNumber;
                 // aa.Message_Id__c ='5345325435423423515135241';
                 insert aa;
-                  system.debug('aa.Text__c'+aa.Text__c);
-                
-                Inbound_WhatsApp__e inbound_event = new Inbound_WhatsApp__e ();
+                system.debug('aa.Text__c' + aa.Text__c);
+
+                Inbound_WhatsApp__e inbound_event = new Inbound_WhatsApp__e();
                 inbound_event.MessageId__c = aa.Id;
                 Database.SaveResult publish_result = EventBus.publish(inbound_event);
-                if(publish_result.isSuccess()) system.debug('success');
-                else system.debug('fail');
-                
+                if ( publish_result.isSuccess() )
+                    system.debug('success');
+                else
+                    system.debug('fail');
                 // Insert Fils type here//
-                if(aa.Text__c =='audio' || aa.Text__c =='video' || aa.Text__c == 'document' || aa.Text__c == 'image'){
-                    String content =(string) get_Res.get(aa.Text__c);
-                    string contenttype = (string) get_Res.get('mimeType'); 
-                  //  system.debug('content '+contenttype); 
+                if ( aa.Text__c == 'audio' || aa.Text__c == 'video' || aa.Text__c == 'document' || aa.Text__c == 'image' ){
+                    String content = (string) get_Res.get(aa.Text__c);
+                    string contenttype = (string) get_Res.get('mimeType');
+                    //  system.debug('content '+contenttype);
                     content = content.substringAfter('base64,');
-                  //  System.debug('after base 64 '+content); 
-                    ContentVersion cv=New ContentVersion();
+                    //  System.debug('after base 64 '+content);
+                    ContentVersion cv = New ContentVersion();
                     cv.VersionData = EncodingUtil.base64Decode(content);
-                 ///   system.debug('contenttype  '+contenttype);
+                    ///   system.debug('contenttype  '+contenttype);
                     string getcontent = mapMimeTypes(contenttype);
-                  //  system.debug(' getcontent typpe  '+getcontent); 
+                    //  system.debug(' getcontent typpe  '+getcontent);
                     check_content = getcontent;
-                   
+
                     // String extractedString = contenttype.substringAfter('/') + ';';
                     //system.debug(' extractedString typpe  '+extractedString);
-                    cv.PathOnClient =  aa.Text__c+'.'+getcontent;
+                    cv.PathOnClient = aa.Text__c + '.' + getcontent;
                     //  cv.FileType = contenttype;
                     cv.Title = aa.Text__c;
                     cv.FirstPublishLocationId = aa.id;
                     insert cv;
-                    system.debug('get cv id '+cv.id);
-                    // return check_content; 
+                    system.debug('get cv id ' + cv.id);
+                    // return check_content;
                     // Fetch ContentDocumentId from the inserted ContentVersion
-                    cv = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id]; 
+                    cv = [SELECT ContentDocumentId
+                          FROM ContentVersion
+                          WHERE Id = :cv.Id];
                     // Create ContentDocumentLink to link to Account record
-                    if(acc.id !=null){  ContentDocumentLink cdl2 = new ContentDocumentLink();
-                    cdl2.ContentDocumentId = cv.ContentDocumentId;
-                    cdl2.LinkedEntityId = acc.Id;
-                    cdl2.ShareType = 'V'; 
-                    cdl2.Visibility = 'AllUsers';
-                    insert cdl2;
-                    Database.SaveResult[] saveResults = Database.insert(New list<ContentDocumentLink> {cdl2}, false);
-                                     }
+                    if ( acc.id != null ){
+                        ContentDocumentLink cdl2 = new ContentDocumentLink();
+                        cdl2.ContentDocumentId = cv.ContentDocumentId;
+                        cdl2.LinkedEntityId = acc.Id;
+                        cdl2.ShareType = 'V';
+                        cdl2.Visibility = 'AllUsers';
+                        insert cdl2;
+                        Database.SaveResult[] saveResults = Database.insert (New list<ContentDocumentLink>{ cdl2 }, false);
+                    }
                 }
-                Ticket_Key_Words__c[] tk=[Select id,text__c from Ticket_Key_Words__c where text__c != null];
-                //  While creating ticket , need to capture whatsapp text in ticket 
-                if(tk.size()>0){
-                    Ticket__c[]  t_list=New Ticket__c[]{};
-                        for(Ticket_Key_Words__c ts:tk){
-                            if(aa.Text__c.contains(ts.text__c)){
-                                system.debug('Inside Create Ticket ');
-                                Ticket__c t=New Ticket__c();
-                                t.Account__c = acc.id;
-                                t.Whatsapp_Text__c = aa.id;
-                                t.Stage__c = 'Ticket Raised';
-                               t.OwnerId = acc.OwnerId;
-                                t.text__c = aa.Text__c;
-                                t_list.add(t);
-                            }
+                Ticket_Key_Words__c[] tk = [Select id, text__c
+                                            from Ticket_Key_Words__c
+                                            where text__c != null];
+                //  While creating ticket , need to capture whatsapp text in ticket
+                if ( tk.size() > 0 ){
+                    Ticket__c[] t_list = New Ticket__c[]{  };
+                    for ( Ticket_Key_Words__c ts : tk ){
+                        if ( aa.Text__c.contains(ts.text__c) ){
+                            system.debug('Inside Create Ticket ');
+                            Ticket__c t = New Ticket__c();
+                            t.Account__c = acc.id;
+                            t.Whatsapp_Text__c = aa.id;
+                            t.Stage__c = 'Ticket Raised';
+                            t.OwnerId = acc.OwnerId;
+                            t.text__c = aa.Text__c;
+                            t_list.add(t);
                         }
+                    }
                     insert t_list;
-                  //  system.debug('ticket list size () '+t_list.Size());
-                    if(t_list.Size()>0) system.debug('get ticket id '+t_list[0].id);
+                    //  system.debug('ticket list size () '+t_list.Size());
+                    if ( t_list.Size() > 0 )
+                        system.debug('get ticket id ' + t_list[0].id);
                 }
             }
+        } catch ( exception e ){
+            system.debug('get error message ' + e.getMessage());
+            system.debug('get error line' + e.getLineNumber());
+            string message_er = e.getMessage().replace('List has no rows for assignment to SObject', 'Account Not Found..!!!');
+            return_type = ' Get Error ==> ' + message_er + '|| Error on line ' + e.getLineNumber();
         }
-        catch(exception e){
-            system.debug('get error message '+e.getMessage());
-             system.debug('get error line'+e.getLineNumber());
-            string message_er=e.getMessage().replace('List has no rows for assignment to SObject','Account Not Found..!!!');
-            return_type =' Get Error ==> '+message_er+'|| Error on line '+e.getLineNumber();  
-        }
-        
+
         return return_type;
-        
     }
-    
-    public Static String extractNumber(String remoteJid) {
+
+    @future(callout = true)
+    private static void handleTicketCreationOrRejection(String phoneNumber, String message){
+        map<String, Object> JSONBody = new map<String, Object>{ 'accessToken' => '6662ffeec2d045b4d3f4bc41', 'mobile' => '91' + phoneNumber, 'text' => message };
+
+        HttpRequest request = new HttpRequest();
+        Http http = new Http();
+        HttpResponse response = new HttpResponse();
+
+        request = new HttpRequest();
+        request.setEndpoint(system.label.Whatsera_Send_Sms_EndPoint + '/api/send/text');
+        request.setMethod('POST');
+        request.setHeader('Content-Type', 'Application/Json');
+        request.setBody(JSON.serialize(JSONBody));
+        request.setTimeout(120000);
+        http = new Http();
+        system.debug(request);
+
+        response = http.send(request);
+    }
+
+    public Static String extractNumber(String remoteJid){
         // Split the string by '@' to separate the number from the domain
         String[] parts = remoteJid.split('@');
         // The number will be the first part before '@'
         String phoneNumber = parts[0];
         return phoneNumber;
     }
-    
-    
+
     public static String mapMimeTypes(String fileType){
         map<String, String> mimeTypeMap = new map<String, String>();
-        if(fileType == 'image/png')fileType='image/jpeg';
-        mimeTypeMap.put('jpeg', 'image/jpeg'); 
+        if ( fileType == 'image/png' )
+            fileType = 'image/jpeg';
+        mimeTypeMap.put('jpeg', 'image/jpeg');
         mimeTypeMap.put('323', 'text/h323');
         mimeTypeMap.put('3g2', 'video/3gpp2');
         mimeTypeMap.put('3gp', 'video/3gpp');
@@ -178,7 +206,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('accdw', 'application/msaccess.webapplication');
         mimeTypeMap.put('accft', 'application/msaccess.ftemplate');
         mimeTypeMap.put('acx', 'application/internet-property-stream');
-       mimeTypeMap.put('addin', 'text/xml');
+        mimeTypeMap.put('addin', 'text/xml');
         mimeTypeMap.put('ade', 'application/msaccess');
         mimeTypeMap.put('adobebridge', 'application/x-bridge-url');
         mimeTypeMap.put('adp', 'application/msaccess');
@@ -187,7 +215,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('afm', 'application/octet-stream');
         mimeTypeMap.put('ai', 'application/postscript');
         mimeTypeMap.put('aif', 'audio/x-aiff');
-       mimeTypeMap.put('aifc', 'audio/aiff');
+        mimeTypeMap.put('aifc', 'audio/aiff');
         mimeTypeMap.put('aiff', 'audio/aiff');
         mimeTypeMap.put('air', 'application/vnd.adobe.air-application-installer-package+zip');
         mimeTypeMap.put('amc', 'application/x-mpeg');
@@ -200,7 +228,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('asf', 'video/x-ms-asf');
         mimeTypeMap.put('ashx', 'application/xml');
         mimeTypeMap.put('asi', 'application/octet-stream');
-         
+
         mimeTypeMap.put('asmx', 'application/xml');
         mimeTypeMap.put('aspx', 'application/xml');
         mimeTypeMap.put('asr', 'video/x-ms-asf');
@@ -209,16 +237,16 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('au', 'audio/basic');
         mimeTypeMap.put('avi', 'video/x-msvideo');
         mimeTypeMap.put('axs', 'application/olescript');
-        
+
         mimeTypeMap.put('bcpio', 'application/x-bcpio');
         mimeTypeMap.put('bin', 'application/octet-stream');
         mimeTypeMap.put('bmp', 'image/bmp');
-        
+
         mimeTypeMap.put('cab', 'application/octet-stream');
         mimeTypeMap.put('caf', 'audio/x-caf');
         mimeTypeMap.put('calx', 'application/vnd.ms-office.calx');
         mimeTypeMap.put('cat', 'application/vnd.ms-pki.seccat');
-        
+
         mimeTypeMap.put('cdda', 'audio/aiff');
         mimeTypeMap.put('cdf', 'application/x-cdf');
         mimeTypeMap.put('cer', 'application/x-x509-ca-cert');
@@ -226,28 +254,28 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('class', 'application/x-java-applet');
         mimeTypeMap.put('clp', 'application/x-msclip');
         mimeTypeMap.put('cmx', 'image/x-cmx');
-   
+
         mimeTypeMap.put('cod', 'image/cis-cod');
         mimeTypeMap.put('config', 'application/xml');
         mimeTypeMap.put('contact', 'text/x-ms-contact');
         mimeTypeMap.put('coverage', 'application/xml');
         mimeTypeMap.put('cpio', 'application/x-cpio');
-        
+
         mimeTypeMap.put('crd', 'application/x-mscardfile');
         mimeTypeMap.put('crl', 'application/pkix-crl');
         mimeTypeMap.put('crt', 'application/x-x509-ca-cert');
-        
+
         mimeTypeMap.put('csh', 'application/x-csh');
-        
+
         mimeTypeMap.put('css', 'text/css');
         mimeTypeMap.put('csv', 'text/csv');
         mimeTypeMap.put('cur', 'application/octet-stream');
-        
+
         mimeTypeMap.put('dat', 'application/octet-stream');
         mimeTypeMap.put('datasource', 'application/xml');
-        
+
         mimeTypeMap.put('dcr', 'application/x-director');
-        
+
         mimeTypeMap.put('deploy', 'application/octet-stream');
         mimeTypeMap.put('der', 'application/x-x509-ca-cert');
         mimeTypeMap.put('dgml', 'application/xml');
@@ -257,7 +285,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('disco', 'text/xml');
         mimeTypeMap.put('dll', 'application/x-msdownload');
         mimeTypeMap.put('dll.config', 'text/xml');
-        mimeTypeMap.put('dlm', 'text/dlm');    
+        mimeTypeMap.put('dlm', 'text/dlm');
         mimeTypeMap.put('doc', 'application/msword');
         mimeTypeMap.put('docm', 'application/vnd.ms-word.document.macroenabled.12');
         mimeTypeMap.put('docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
@@ -265,7 +293,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('dotm', 'application/vnd.ms-word.template.macroenabled.12');
         mimeTypeMap.put('dotx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template');
         mimeTypeMap.put('dsp', 'application/octet-stream');
-        
+
         mimeTypeMap.put('dtd', 'text/xml');
         mimeTypeMap.put('dtsconfig', 'text/xml');
         mimeTypeMap.put('dv', 'video/x-dv');
@@ -292,18 +320,18 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('fsx', 'application/fsharp-script');
         mimeTypeMap.put('generictest', 'application/xml');
         mimeTypeMap.put('gif', 'image/gif');
-          mimeTypeMap.put('group', 'text/x-ms-group');
+        mimeTypeMap.put('group', 'text/x-ms-group');
         mimeTypeMap.put('gsm', 'audio/x-gsm');
         mimeTypeMap.put('gtar', 'application/x-gtar');
         mimeTypeMap.put('gz', 'application/x-gzip');
-        
+
         mimeTypeMap.put('hdf', 'application/x-hdf');
         mimeTypeMap.put('hdml', 'text/x-hdml');
         mimeTypeMap.put('hhc', 'application/x-oleobject');
         mimeTypeMap.put('hhk', 'application/octet-stream');
         mimeTypeMap.put('hhp', 'application/octet-stream');
         mimeTypeMap.put('hlp', 'application/winhlp');
-        
+
         mimeTypeMap.put('hqx', 'application/mac-binhex40');
         mimeTypeMap.put('hta', 'application/hta');
         mimeTypeMap.put('htc', 'text/x-component');
@@ -324,19 +352,19 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('hxt', 'text/html');
         mimeTypeMap.put('hxv', 'application/xml');
         mimeTypeMap.put('hxw', 'application/octet-stream');
-        
-        
+
+
         mimeTypeMap.put('ico', 'image/x-icon');
         mimeTypeMap.put('ics', 'application/octet-stream');
         mimeTypeMap.put('ief', 'image/ief');
         mimeTypeMap.put('iii', 'application/x-iphone');
         mimeTypeMap.put('inf', 'application/octet-stream');
-        
+
         mimeTypeMap.put('ins', 'application/x-internet-signup');
         mimeTypeMap.put('ipa', 'application/x-itunes-ipa');
         mimeTypeMap.put('ipg', 'application/x-itunes-ipg');
-        
-      mimeTypeMap.put('ipsw', 'application/x-itunes-ipsw');
+
+        mimeTypeMap.put('ipsw', 'application/x-itunes-ipsw');
         mimeTypeMap.put('iqy', 'text/x-ms-iqy');
         mimeTypeMap.put('isp', 'application/x-internet-signup');
         mimeTypeMap.put('ite', 'application/x-itunes-ite');
@@ -350,18 +378,18 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('jcz', 'application/liquidmotion');
         mimeTypeMap.put('jfif', 'image/pjpeg');
         mimeTypeMap.put('jnlp', 'application/x-java-jnlp-file');
-        mimeTypeMap.put('jpb', 'application/octet-stream');  
-        
+        mimeTypeMap.put('jpb', 'application/octet-stream');
+
         mimeTypeMap.put('js', 'application/x-javascript');
         mimeTypeMap.put('jsx', 'text/jscript');
-        
+
         mimeTypeMap.put('latex', 'application/x-latex');
         mimeTypeMap.put('library-ms', 'application/windows-library+xml');
         mimeTypeMap.put('lit', 'application/x-ms-reader');
         mimeTypeMap.put('loadtest', 'application/xml');
         mimeTypeMap.put('lpk', 'application/octet-stream');
         mimeTypeMap.put('lsf', 'video/x-la-asf');
-        
+
         mimeTypeMap.put('lsx', 'video/x-la-asf');
         mimeTypeMap.put('lzh', 'application/octet-stream');
         mimeTypeMap.put('m13', 'application/x-msmediaview');
@@ -378,10 +406,10 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('m4r', 'audio/x-m4r');
         mimeTypeMap.put('m4v', 'video/x-m4v');
         mimeTypeMap.put('mac', 'image/x-macpaint');
-        
+
         mimeTypeMap.put('man', 'application/x-troff-man');
         mimeTypeMap.put('manifest', 'application/x-ms-manifest');
-        
+
         mimeTypeMap.put('master', 'application/xml');
         mimeTypeMap.put('mda', 'application/msaccess');
         mimeTypeMap.put('mdb', 'application/x-msaccess');
@@ -394,7 +422,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('mid', 'audio/mid');
         mimeTypeMap.put('midi', 'audio/mid');
         mimeTypeMap.put('mix', 'application/octet-stream');
-        
+
         mimeTypeMap.put('mmf', 'application/x-smaf');
         mimeTypeMap.put('mno', 'text/xml');
         mimeTypeMap.put('mny', 'application/x-msmoney');
@@ -404,7 +432,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('mp2', 'video/mpeg');
         mimeTypeMap.put('mp2v', 'video/mpeg');
         mimeTypeMap.put('mp3', 'audio/mpeg');
-        mimeTypeMap.put('mp4', 'video/mp4'); 
+        mimeTypeMap.put('mp4', 'video/mp4');
         mimeTypeMap.put('mpa', 'video/mpeg');
         mimeTypeMap.put('mpe', 'video/mpeg');
         mimeTypeMap.put('mpeg', 'video/mpeg');
@@ -419,7 +447,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('mts', 'video/vnd.dlna.mpeg-tts');
         mimeTypeMap.put('mtx', 'application/xml');
         mimeTypeMap.put('mvb', 'application/x-msmediaview');
-          mimeTypeMap.put('mvc', 'application/x-miva-compiled');
+        mimeTypeMap.put('mvc', 'application/x-miva-compiled');
         mimeTypeMap.put('mxp', 'application/x-mmxp');
         mimeTypeMap.put('nc', 'application/x-netcdf');
         mimeTypeMap.put('nsc', 'video/x-ms-asf');
@@ -427,7 +455,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('ocx', 'application/octet-stream');
         mimeTypeMap.put('oda', 'application/oda');
         mimeTypeMap.put('odc', 'text/x-ms-odc');
-        
+
         mimeTypeMap.put('odp', 'application/vnd.oasis.opendocument.presentation');
         mimeTypeMap.put('ods', 'application/oleobject');
         mimeTypeMap.put('odt', 'application/vnd.oasis.opendocument.text');
@@ -455,22 +483,22 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('pfb', 'application/octet-stream');
         mimeTypeMap.put('pfm', 'application/octet-stream');
         mimeTypeMap.put('pfx', 'application/x-pkcs12');
-          mimeTypeMap.put('pgm', 'image/x-portable-graymap');
+        mimeTypeMap.put('pgm', 'image/x-portable-graymap');
         mimeTypeMap.put('pic', 'image/pict');
         mimeTypeMap.put('pict', 'image/pict');
-        
+
         mimeTypeMap.put('pko', 'application/vnd.ms-pki.pko');
         mimeTypeMap.put('pls', 'audio/scpls');
-    mimeTypeMap.put('pma', 'application/x-perfmon');
+        mimeTypeMap.put('pma', 'application/x-perfmon');
         mimeTypeMap.put('pmc', 'application/x-perfmon');
         mimeTypeMap.put('pml', 'application/x-perfmon');
         mimeTypeMap.put('pmr', 'application/x-perfmon');
         mimeTypeMap.put('pmw', 'application/x-perfmon');
-       // mimeTypeMap.put('jpeg', 'image/png');
+        // mimeTypeMap.put('jpeg', 'image/png');
         mimeTypeMap.put('pnm', 'image/x-portable-anymap');
-        mimeTypeMap.put('pnt', 'image/x-macpaint'); 
+        mimeTypeMap.put('pnt', 'image/x-macpaint');
         mimeTypeMap.put('pot', 'application/vnd.ms-powerpoint');
-       mimeTypeMap.put('potm', 'application/vnd.ms-powerpoint.template.macroenabled.12');
+        mimeTypeMap.put('potm', 'application/vnd.ms-powerpoint.template.macroenabled.12');
         mimeTypeMap.put('potx', 'application/vnd.openxmlformats-officedocument.presentationml.template');
         mimeTypeMap.put('ppa', 'application/vnd.ms-powerpoint');
         mimeTypeMap.put('ppam', 'application/vnd.ms-powerpoint.addin.macroenabled.12');
@@ -479,7 +507,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('ppsm', 'application/vnd.ms-powerpoint.slideshow.macroenabled.12');
         mimeTypeMap.put('ppsx', 'application/vnd.openxmlformats-officedocument.presentationml.slideshow');
         mimeTypeMap.put('ppt', 'application/vnd.ms-powerpoint');
-         mimeTypeMap.put('pptm', 'application/vnd.ms-powerpoint.presentation.macroenabled.12');
+        mimeTypeMap.put('pptm', 'application/vnd.ms-powerpoint.presentation.macroenabled.12');
         mimeTypeMap.put('pptx', 'application/vnd.openxmlformats-officedocument.presentationml.presentation');
         mimeTypeMap.put('prf', 'application/pics-rules');
         mimeTypeMap.put('prm', 'application/octet-stream');
@@ -488,7 +516,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('psc1', 'application/powershell');
         mimeTypeMap.put('psd', 'application/octet-stream');
         mimeTypeMap.put('psess', 'application/xml');
-      mimeTypeMap.put('psm', 'application/octet-stream');
+        mimeTypeMap.put('psm', 'application/octet-stream');
         mimeTypeMap.put('psp', 'application/octet-stream');
         mimeTypeMap.put('pub', 'application/x-mspublisher');
         mimeTypeMap.put('pwz', 'application/vnd.ms-powerpoint');
@@ -504,12 +532,12 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('rar', 'application/octet-stream');
         mimeTypeMap.put('ras', 'image/x-cmu-raster');
         mimeTypeMap.put('rat', 'application/rat-file');
-        
+
         mimeTypeMap.put('rdlc', 'application/xml');
         mimeTypeMap.put('resx', 'application/xml');
         mimeTypeMap.put('rf', 'image/vnd.rn-realflash');
         mimeTypeMap.put('rgb', 'image/x-rgb');
-        
+
         mimeTypeMap.put('rm', 'application/vnd.rn-realmedia');
         mimeTypeMap.put('rmi', 'audio/mid');
         mimeTypeMap.put('rmp', 'application/vnd.rn-rn_music_package');
@@ -519,7 +547,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('rtf', 'application/rtf');
         mimeTypeMap.put('rtx', 'text/richtext');
         mimeTypeMap.put('ruleset', 'application/xml');
-        
+
         mimeTypeMap.put('safariextz', 'application/x-safari-safariextz');
         mimeTypeMap.put('scd', 'application/x-msschedule');
         mimeTypeMap.put('sct', 'text/scriptlet');
@@ -541,7 +569,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('sldm', 'application/vnd.ms-powerpoint.slide.macroenabled.12');
         mimeTypeMap.put('sldx', 'application/vnd.openxmlformats-officedocument.presentationml.slide');
         mimeTypeMap.put('slk', 'application/vnd.ms-excel');
-        
+
         mimeTypeMap.put('slupkg-ms', 'application/x-ms-license');
         mimeTypeMap.put('smd', 'audio/x-smd');
         mimeTypeMap.put('smi', 'application/octet-stream');
@@ -550,11 +578,11 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('snd', 'audio/basic');
         mimeTypeMap.put('snippet', 'application/xml');
         mimeTypeMap.put('snp', 'application/octet-stream');
-        
+
         mimeTypeMap.put('spc', 'application/x-pkcs7-certificates');
         mimeTypeMap.put('spl', 'application/futuresplash');
         mimeTypeMap.put('src', 'application/x-wais-source');
-        
+
         mimeTypeMap.put('ssisdeploymentmanifest', 'text/xml');
         mimeTypeMap.put('ssm', 'application/streamingmedia');
         mimeTypeMap.put('sst', 'application/vnd.ms-pki.certstore');
@@ -576,8 +604,8 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('thn', 'application/octet-stream');
         mimeTypeMap.put('tif', 'image/tiff');
         mimeTypeMap.put('tiff', 'image/tiff');
-        
-      mimeTypeMap.put('toc', 'application/octet-stream');
+
+        mimeTypeMap.put('toc', 'application/octet-stream');
         mimeTypeMap.put('tr', 'application/x-troff');
         mimeTypeMap.put('trm', 'application/x-msterminal');
         mimeTypeMap.put('trx', 'application/xml');
@@ -587,13 +615,13 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('tts', 'video/vnd.dlna.mpeg-tts');
         mimeTypeMap.put('txt', 'text/plain');
         mimeTypeMap.put('u32', 'application/octet-stream');
-        mimeTypeMap.put('uls', 'text/iuls'); 
-        mimeTypeMap.put('ustar', 'application/x-ustar');  
-        mimeTypeMap.put('vbk', 'video/mpeg'); 
+        mimeTypeMap.put('uls', 'text/iuls');
+        mimeTypeMap.put('ustar', 'application/x-ustar');
+        mimeTypeMap.put('vbk', 'video/mpeg');
         mimeTypeMap.put('vbs', 'text/vbscript');
         mimeTypeMap.put('vcf', 'text/x-vcard');
-        mimeTypeMap.put('vcproj', 'application/xml'); 
-        mimeTypeMap.put('vcxproj', 'application/xml'); 
+        mimeTypeMap.put('vcproj', 'application/xml');
+        mimeTypeMap.put('vcxproj', 'application/xml');
         mimeTypeMap.put('vdx', 'application/vnd.ms-visio.viewer');
         mimeTypeMap.put('vml', 'text/xml');
         mimeTypeMap.put('vscontent', 'application/xml');
@@ -603,9 +631,9 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('vsix', 'application/vsix');
         mimeTypeMap.put('vsixlangpack', 'text/xml');
         mimeTypeMap.put('vsixmanifest', 'text/xml');
-        mimeTypeMap.put('vsmdi', 'application/xml'); 
-        mimeTypeMap.put('vss', 'application/vnd.visio'); 
-        mimeTypeMap.put('vssettings', 'text/xml'); 
+        mimeTypeMap.put('vsmdi', 'application/xml');
+        mimeTypeMap.put('vss', 'application/vnd.visio');
+        mimeTypeMap.put('vssettings', 'text/xml');
         mimeTypeMap.put('vst', 'application/vnd.visio');
         mimeTypeMap.put('vstemplate', 'text/xml');
         mimeTypeMap.put('vsto', 'application/x-ms-vsto');
@@ -654,7 +682,7 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('xap', 'application/x-silverlight-app');
         mimeTypeMap.put('xbap', 'application/x-ms-xbap');
         mimeTypeMap.put('xbm', 'image/x-xbitmap');
-        
+
         mimeTypeMap.put('xht', 'application/xhtml+xml');
         mimeTypeMap.put('xhtml', 'application/xhtml+xml');
         mimeTypeMap.put('xla', 'application/vnd.ms-excel');
@@ -675,8 +703,8 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('xml', 'text/xml');
         mimeTypeMap.put('xmta', 'application/xml');
         mimeTypeMap.put('xof', 'x-world/x-vrml');
-        
-    mimeTypeMap.put('xpm', 'image/x-xpixmap');
+
+        mimeTypeMap.put('xpm', 'image/x-xpixmap');
         mimeTypeMap.put('xps', 'application/vnd.ms-xpsdocument');
         mimeTypeMap.put('xrm-ms', 'text/xml');
         mimeTypeMap.put('xsc', 'application/xml');
@@ -692,90 +720,89 @@ Global without sharing class Restapi_Inbound_sms{
         mimeTypeMap.put('zip', 'application/x-zip-compressed');
         mimeTypeMap.put('mp3', 'audio/ogg');
         mimeTypeMap.put('mp3', 'audio/ogg; codecs=opus');
-        mimeTypeMap.put('webp', 'image/webp'); 
-        
-        for (String key : mimeTypeMap.keySet()) {
+        mimeTypeMap.put('webp', 'image/webp');
+
+        for ( String key : mimeTypeMap.keySet() ){
             //    system.debug('&&&&&&&&&&&&&&&&&&&&&& '+mimeTypeMap.get(key)+'  ====== '+fileType);
-            if ((string)mimeTypeMap.get(key).toLowerCase() == fileType.toLowerCase()) {
+            if ( (string) mimeTypeMap.get(key).toLowerCase() == fileType.toLowerCase() ){
                 return key;
             }
         }
-        
+
         return '*/*';
     }
-    
+
     public class generate_accesstoken{
         public String access_token;
         public String instance_url;
         public String id;
         public String token_type;
         public String signature;
-        
     }
-    
-    public class fromJSON
-    {
+
+    public class fromJSON{
         public key_cls key;
-        public decimal messageTimestamp ; 
-        public String pushName ; 
-        public boolean brodcast ; 
-        public message_cls message; 
-        public String inviteLinkGroupTypeV2 ; 
-        public messageContextInfo_cls msgcontext ; 
-        public decimal deviceListMetadataVersion ; 
-        
+        public decimal messageTimestamp;
+        public String pushName;
+        public boolean brodcast;
+        public message_cls message;
+        public String inviteLinkGroupTypeV2;
+        public messageContextInfo_cls msgcontext;
+        public decimal deviceListMetadataVersion;
     }
+
     class messageContextInfo_cls{
-        public deviceListMetadata_cls devicemeta ; 
-        
+        public deviceListMetadata_cls devicemeta;
     }
+
     @testVisible
     class message_cls{
-        public extendedTextMessage_cls extendedTextMessage ; 
-        public contextinfo_cls contextInfo; 
-        public disappearingMode_cls deviceListMetadataVersion ; 
+        public extendedTextMessage_cls extendedTextMessage;
+        public contextinfo_cls contextInfo;
+        public disappearingMode_cls deviceListMetadataVersion;
     }
+
     @testVisible
     class extendedTextMessage_cls{
-        public String text ; 
-        
-        
+        public String text;
     }
+
     class contextinfo_cls{
-        public decimal forwardingScore ; 
-        public boolean isForwarded ; 
-        public String ephemeralSettingTimestamp ; 
+        public decimal forwardingScore;
+        public boolean isForwarded;
+        public String ephemeralSettingTimestamp;
     }
+
     class disappearingMode_cls{
-        public String initiator ; 
-        public String trigger1 ; 
+        public String initiator;
+        public String trigger1;
     }
+
     class deviceListMetadata_cls{
-        public String senderKeyHash ; 
-        public String senderTimestamp ; 
-        public String recipientKeyHash ; 
-        public String recipientTimestamp ; 
+        public String senderKeyHash;
+        public String senderTimestamp;
+        public String recipientKeyHash;
+        public String recipientTimestamp;
     }
+
     @testVisible
-    class key_cls {
-        public String remoteJid;	//919832560557@s.whatsapp.net
+    class key_cls{
+        public String remoteJid;    //919832560557@s.whatsapp.net
         public boolean fromMe;
-        public String id;	//3EB0F9E8885DC29450B3C0
+        public String id;    //3EB0F9E8885DC29450B3C0
     }
-    
-    
+
     public static fromJSON parse(String json){
-        return (fromJSON) System.JSON.deserialize(json, fromJSON.class);
-    } 
-    
-        @Httpget
+        return (fromJSON)System.JSON.deserialize(json, fromJSON.class);
+    }
+
+    @Httpget
     Global static String doGet(){
         RestRequest req = RestContext.request;
         RestResponse res = RestContext.response;
-       system.debug('req '+req);
-           system.debug('res '+res);
+        system.debug('req ' + req);
+        system.debug('res ' + res);
         Return 'Successfully Payment Done';
-        
-        
     }
+
 }
