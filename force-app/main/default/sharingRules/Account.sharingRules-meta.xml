@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>Code_Created_acc_share_to_OPS</fullName>
+        <accessLevel>Read</accessLevel>
+        <accountSettings>
+            <caseAccessLevel>None</caseAccessLevel>
+            <contactAccessLevel>Read</contactAccessLevel>
+            <opportunityAccessLevel>None</opportunityAccessLevel>
+        </accountSettings>
+        <label>Code Created acc share to OPS</label>
+        <sharedTo>
+            <group>POS_Ops_Users</group>
+        </sharedTo>
+        <criteriaItems>
+            <field>Stage__c</field>
+            <operation>equals</operation>
+            <value>Code Created</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>true</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+    <sharingGuestRules>
+        <fullName>Share_With_Guest</fullName>
+        <accessLevel>Read</accessLevel>
+        <label>Share_With_Guest</label>
+        <sharedTo>
+            <guestUser>InboundMsg</guestUser>
+        </sharedTo>
+        <criteriaItems>
+            <field>CreatedById</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </criteriaItems>
+        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
+    </sharingGuestRules>
+    <sharingGuestRules>
+        <fullName>Upload_Docs_Profile_Account_Sharing</fullName>
+        <accessLevel>Read</accessLevel>
+        <label>Upload Docs Profile Account Sharing</label>
+        <sharedTo>
+            <guestUser>Upload_Docs</guestUser>
+        </sharedTo>
+        <criteriaItems>
+            <field>OwnerId</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </criteriaItems>
+        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
+    </sharingGuestRules>
+</SharingRules>

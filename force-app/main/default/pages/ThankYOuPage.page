@@ -1,0 +1,28 @@
+<!-- Last Modified By : Abdul Aziz , Date : 04/05/2024 ,Description : Update Message -->
+<apex:page showHeader="false" sidebar="false">
+    
+    <apex:form >
+        
+            <apex:pageBlock >
+                <div style="height:100px;">
+                </div>
+                <div style="display:flex;flex-direction:column;height:1000px;">
+                    <div style="height:50px;background-color:#1798c1;font-size:25px;font-family: Georgia, serif;text-align:center;padding-top:20px;color:white;">
+                        <b>Thanks For Uploading Your Documents !!!</b>
+                    </div>
+                   <!-- <div style="background-color:white;text-align:center;padding:5px;">
+                          <apex:image url="{!$Resource.whatsapp}" width="300px" height="250px" />
+                       
+                    </div>
+                    <div style="text-align:center;height:200px;font-size:15px;margin-top:-20px;">
+                        <p>
+                            Email : info@admissiongyan.com<br/>https://www.admissiongyan.com/ <br/>
+    
+                            Address : 63, 2nd floor, Ambition Arcade, near Someshwara Temple, KHB Colony, <br/> 7th Block, Koramangala, Bengaluru, Karnataka 560095
+                        </p>
+                    </div>-->
+                </div>
+            </apex:pageBlock>
+      
+    </apex:form>
+</apex:page>

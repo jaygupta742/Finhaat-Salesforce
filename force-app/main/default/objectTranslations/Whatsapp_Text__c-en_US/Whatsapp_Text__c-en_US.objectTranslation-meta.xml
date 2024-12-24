@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Whatsapp Text</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Whatsapp Texts</value>
+    </caseValues>
+    <layouts>
+        <layout>Wap Layout for all profiles</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Whatsapp Text --></label>
+            <section>Whatsapp Text</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Whatsapp Text Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- New Ticket --></label>
+        <name>Create_Ticket</name>
+    </quickActions>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

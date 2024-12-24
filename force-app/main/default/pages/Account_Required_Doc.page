@@ -1,0 +1,161 @@
+<apex:page standardController="Account" extensions="Account_Required_Doc" showHeader="false" docType="html-5.0">
+    <head>
+        <style>
+            @page {
+            margin-left:100px;
+            margin-right:10px;
+            padding-right:10px;
+            padding-left:10px;
+            margin-top:20px;
+            background-repeat: no-repeat;
+            font-family: Trebuchet MS, Sans-serif;
+            background-position:center;
+            font-size:12px;
+            <!--border: 1px solid black;-->
+            margin-bottom:30px;
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+            
+            
+            @bottom{
+            content: element(footer);
+            }
+            @top-right {
+            
+            content: element(header); 
+            }
+            }
+            body { 
+            font-family: Trebuchet MS, Sans-serif; 
+            font-size:12px;
+            }
+            
+            .customImage{
+            height: 10px !important; 
+            width:10px !important;
+            }
+            .otherDivs{
+            margin-right:120px;
+            margin-left:120px;
+            margin-top:25px;
+            font-size:11px;
+            
+            }
+            div.header {
+            position: running(header);
+            }
+            
+            div.footer {
+            display:block;
+            padding: 5px;
+            position: running(footer);
+            vertical-align:bottom;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <apex:form >
+            <!-- ================================= HEADER ===================================== -->
+           <!-- <apex:pageBlock >
+                <table style="width: 100%;">
+                    <thead>
+                        <tr style="width: 100%;">
+                            <th style="width: 50%;">
+                                <apex:image id="theImage" value="{!$Resource.whatsapp}" width="200" height="60" alt="Company logo" style="margin: 5px;"/>
+                            </th>
+                            <th style="width: 50%; text-align: right; vertical-align: bottom;">
+                                <apex:outputText style="font-size: 36px; font-weight: bold;" value="Admissiongyan Education Consultancy"></apex:outputText>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </apex:pageBlock>-->
+            
+            <!-- ============================== MAIN CONTENT ================================= -->
+            
+            <center>
+                <!-- button-->
+                <apex:pageBlock >
+                    <apex:pageBlockButtons location="top"  style="padding-left:200px;font-size: 20px;">
+                        <apex:commandButton action="{!SaveRecords}" value="Update Record"/>
+                    </apex:pageBlockButtons>
+                </apex:pageBlock>
+                <!-- button-->
+                
+                <table style="margin-top:20px;margin-left:0px;width:95%;margin:40px; border:1px solid black; border-top:2px solid black; border-bottom:1px solid black;
+                              table-layout:fixed;" cellspacing="0" cellpadding="0">
+                    
+                    <thead style="height:35px; font-weight:bold; background-color:#D5F5E3;">
+                        <tr style="border:2px solid black;">
+                            <th  style="width:10%; border-bottom:1px solid black; border-left: 1px solid black; ">
+                                <div style="font-size:11px;text-align:left;margin-top:0px; text-align:center; font-size: 15px;"> Sr.No</div>
+                            </th>
+                            <th  style="width:25%; border-bottom:1px solid black;">
+                                <div style="font-size:11px;text-align:left;margin-top:0px; text-align:center; font-size: 15px;"> Required Doc Name</div>
+                            </th>
+                            <th  style="width:25%; border-bottom:1px solid black;">
+                                <div style="font-size:11px;text-align:left;margin-top:0px; text-align:center; font-size: 15px;">Instruction</div>
+                            </th>
+                            <th  style="width:20%; border-bottom:1px solid black;">
+                                <div style="font-size:11px;text-align:left;margin-top:0px; text-align:center; font-size: 15px;"> Insert Documents</div>
+                            </th>
+                            
+                            
+                            <th  style="width:30%; border-bottom:1px solid black; border-right: 1px solid black;">
+                                <div style="width:85%;font-size:11px;text-align:left;margin-top:0px; text-align:center; font-size: 15px;"> Comments</div>
+                            </th>
+                        </tr>
+                        
+                    </thead>
+                    
+                    <!---------------- product details------------->
+                    <tbody style="margin-top:5px;margin-left:20px" > 
+                        <apex:variable var="index" value="{!1}"/>
+                        <apex:repeat value="{!wrap_doc_list}" var="docs">
+                            
+                            <tr style="font-size:15px; text-align:center; height:35px; ">
+                                <td style="vertical-align: middle; border:1px solid black; ">
+                                    {!index}
+                                    <apex:variable var="index" value="{!index+1}"/>  
+                                </td>
+                                <td style="vertical-align:middle; border:1px solid black; "> 
+                                    <div style="margin-bottom:3px;margin-top:3px;" >
+                                        <b>   {!docs.doc_no} </b>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; border:1px solid black; "> 
+                                    <div style="margin-bottom:3px;margin-top:3px;" >
+                                        <b>   {!docs.instruction} </b>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: middle; border:1px solid black;width:100%;"> 
+                                    <div style="width:100%;margin-bottom:3px;margin-top:3px; text-align:center;margin-left:30px;" >
+                                        <apex:inputFile value="{!docs.file_content}" fileName="{!docs.file_name}" ></apex:inputFile>
+                                    </div>
+                                </td>
+                                
+                                
+                                
+                                <td style="width: 90%;border:1px solid black;"> 
+                                    <div style="width: 100%;margin-top:1.5px;" >
+                                        <apex:inputTextarea value="{!docs.Comments}"  style="width: 98%;" id="theTextInput"/>
+                                        <!--  <apex:inputText value="{!docs.rd.Comments__c}" style="width: 90%" id="theTextInput"/> -->
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                        </apex:repeat>
+                    </tbody>
+                </table>
+                
+            </center>
+            
+            
+        </apex:form>
+    </body>
+    
+    
+    
+</apex:page>

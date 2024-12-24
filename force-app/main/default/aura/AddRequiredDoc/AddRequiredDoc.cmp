@@ -1,0 +1,124 @@
+<aura:component controller="AddRequiredDoc" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionwithoutHeader" access="global" >
+    <aura:attribute name="masterdoclist" type="object[]" />
+    <aura:attribute name="filter1" type="string" default=""/>
+    <aura:attribute name="add_more_btn_status" type="Boolean" default="false"/>
+    <aura:attribute name="save_btn_status" type="Boolean" default="false"/>
+    <aura:attribute name="flag" type="Boolean" default="" />
+     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:html tag="style">
+        .slds-modal__container{
+        height : 100%;
+        width: 75%;
+        max-width: 180rem; 
+        }
+        .modal-body{
+        height : 400px !important;
+        max-height: 550px !important;
+        }
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }       
+        .slds-modal__content{
+        overflow-y:0rem !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+        html{
+        background-color: white;
+        
+        }
+    </aura:html>
+    
+    <div class="slds-modal__header">
+        <h1 class="slds-text-heading_medium">Add Required Documents</h1>
+    </div>
+    
+    <div class="slds-modal__content slds-p-around_medium">
+        <div style="text-align:center;">
+            <lightning:recordEditForm objectApiName="DDM3__Education_History__c" density="comfy">
+               <!-- <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" largeDeviceSize="4" padding="around-small">
+                    </lightning:layoutItem>
+                    
+                    <lightning:layoutItem size="12" largeDeviceSize="4" padding="around-small">
+                  <b style="font-size:14px">   
+                        <lightning:select name="select1" label="Category" variant="label-inline" value="{!v.filter1}" onchange="{!c.dd}" >
+                            <option value="">choose one...</option>
+                            <option value="MFI">MFI</option>
+                            <option value="POS">POS</option>
+                            <option value="Other">Other</option> 
+                        </lightning:select>
+                        </b> 
+</lightning:layoutItem> 
+                    
+                    <lightning:layoutItem size="12" largeDeviceSize="2" padding="around-small">
+                        <div style="padding-top:10px;">
+                            
+                            
+                           
+                        </div>
+                    </lightning:layoutItem>
+                    
+                     <lightning:layoutItem size="12" largeDeviceSize="2" padding="around-small">
+                       
+                    </lightning:layoutItem>
+                    
+                </lightning:layout> -->
+            </lightning:recordEditForm>
+        </div>
+       
+            <div class="slds-scrollable_y"  style="height: 300px;">
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer" style="width:100%; font-size:12px; background: #f3f2f2;" cellpadding="0">
+                    <thead>
+                        <tr class="slds-text-title_caps">                    
+                            <th scope="col" style="width:10%;font-size:14px;background-color:#00A1E0;color:white; border: 0.5px solid #c1c1c1;text-align: center; ">
+                                <div class="slds-truncate" style="text-align: center;">S.No</div>
+                            </th>
+                            
+                            <th scope="col" style="width:40%;font-size:14px;background-color:#00A1E0;color:white; border: 0.5px solid #c1c1c1;text-align: center;">
+                                <div class="slds-truncate"><b style="color:red">*</b> Required Document</div>
+                            </th>
+                            <th scope="col" style="width:30%;font-size:14px;background-color:#00A1E0;color:white; border: 0.5px solid #c1c1c1;text-align: center;">
+                                <div class="slds-truncate">Instruction</div>
+                            </th>
+                            <th scope="col" style="width:10%;font-size:14px;background-color:#00A1E0;color:white; border: 0.5px solid #c1c1c1;text-align: center;">
+                                <div class="slds-truncate" title="Delete">Action</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.masterdoclist}" var="orderli" indexVar="rowIndex">
+                            <tr class="slds-text-title_caps" style="height:10px;width:100%;font-size:12px;">
+                                <td style="font-size:12px; border: 0.5px solid #c1c1c1; text-align: center;"> 
+                                    {!rowIndex + 1}
+                                </td>
+                                <td style="font-size:12px; border: 0.5px solid #c1c1c1; text-align:center;font-weight:bold;">
+                                    <lightning:input variant="label-hidden" value="{!orderli.name}" required="false"/> 
+                                    <!--  {!orderli.Name} -->                            
+                                </td>
+                                <td style="font-size:12px; border: 0.5px solid #c1c1c1;text-align:center;font-weight:bold;">
+                                    <lightning:textarea variant="label-hidden" value="{!orderli.instruction}" required="false"/>                           
+                                </td>
+                                <td style="font-size:12px; border: 0.5px solid #c1c1c1;text-align:center;">
+                                    <lightning:buttonIcon class= "deleteIcon" iconName="utility:delete" size = "large" variant="bare" onclick="{!c.DeleteAction}" alternativeText="Settings" title="Settings" value ="{!rowIndex}" />
+                                </td> 
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+                
+            </div>
+       
+    </div>
+    <div class="slds-modal__footer" style="text-align:center;">
+        <lightning:button aura:id="button" class="button" label="Cancel" onclick="{!c.cancel}"/> 
+           <!-- <lightning:button class="button" label="Save and Notify" onclick="{!c.saveitnotify}" variant="brand" disabled="{!v.save_btn_status}"/>-->
+            <lightning:button class="button" label="Save" onclick="{!c.saveit}" variant="brand" disabled="{!v.save_btn_status}"/> 
+            <lightning:button class="button" label="Add More" onclick="{!c.addrow}" variant="brand" disabled="{!v.add_more_btn_status}"/>
+    </div>
+</aura:component>

@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Delete Opportunity Records" icon-name="standard:opportunity">
+        <div slot="actions">
+            <lightning-button label="Proceed" variant="brand" 
+                              onclick={handleDeleteRecords}>
+            </lightning-button>
+        </div>
+        <div class="slds-align_absolute-center" style="font-size: large;">
+            <b>
+                <h5>You have Selected ' {selectedRecords} ' Records, Click Proceed to Delete!</h5>
+            </b>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,18 @@
+<apex:page standardController="Opportunity" recordSetVar="Opportunities" extensions="massOpportunityDeleteClass">
+    <apex:includeLightning />
+    <div id="lightning"> </div>
+    <script>
+    $Lightning.use(
+        "c:massOpportunitiesDeleteAura",
+        function() {
+        $Lightning.createComponent(
+            "c:massOpportunityDeleteLwc",
+            {
+            	recordIds:'{!recordIdList}'
+            },
+            "lightning"
+        );
+    }
+    );
+    </script>
+</apex:page>

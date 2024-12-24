@@ -1,0 +1,123 @@
+<!-- Created By Shreyash Urkude 08/10/2024 . Description : Send the upload profile link to the  -->
+<template>
+    <section style="margin-top:3%" role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__header">
+            <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate"> <lightning-icon
+                    icon-name="standard:email" size="small" class="slds-m-right_x-small"></lightning-icon>Send Upload Document Link
+            </h1>
+        </div>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1"
+            style="max-height: 500px; overflow-y: auto;">
+            <lightning-card>
+                <div style="text-align: left; min-height: 200px; max-height: 450px;margin-top:-20px">
+                    
+                        <lightning-layout multiple-rows="true">
+                            <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                                <div class="slds-p-bottom_xx-small">
+                                <label>To</label>
+                                </div>
+                                <lightning-input type="email" name="recipient" variant="label-hidden"
+                                    value={emailAddress} onkeydown={handleKeyDown}
+                                    onchange={handleOnChangeAddress}></lightning-input>
+                                <div style="display: flex; width: 100%;">
+                                    <div style="width: 90%;">
+                                        <lightning-pill label={ReceipintPillLabel} data-name="recipients"
+                                            onremove={removePill} if:true={ReceipintPillLabel}>
+                                            <lightning-icon icon-name="standard:people"
+                                                alternative-text="People"></lightning-icon>
+                                        </lightning-pill>
+                                        <template for:each={lstAdditionRecipients} for:item="item" for:index="index">
+                                            <span class="slds-p-around_xxx-small" key={item.emailId}>
+                                                <lightning-pill label={item.emailId} data-index={index}
+                                                    data-name="addtional recipients" onremove={removePill}>
+                                                    <lightning-icon icon-name="standard:avatar_loading"
+                                                        alternative-text="People"></lightning-icon>
+                                                </lightning-pill>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <div class="align-right" style="width: 10%;">
+                                        <!--<span onclick={handleCCClick} class="clickAble_Text" if:false={enableCC}>CC</span>
+                                            <span onclick={handleBCCClick} class="clickAble_Text" if:false={enableBCC}>BCC</span> -->
+                                    </div>
+                                </div>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                                <div class="slds-p-bottom_xx-small">
+                                <label>Cc</label>
+                                </div>
+                                <lightning-input type="email" name="cc" variant="label-hidden" value={ccAddress}
+                                    onkeydown={handleKeyDown} onchange={handleOnChangeAddress}></lightning-input>
+                                <template for:each={lstCCAddress} for:item="item" for:index="index">
+                                    <span class="slds-p-around_xxx-small" key={item}>
+                                        <lightning-pill  data-index={index} data-name="cc"
+                                            onremove={removePill} label={item.emailId}>
+                                            <lightning-icon icon-name="standard:avatar_loading"
+                                                alternative-text="People"></lightning-icon>
+                                        </lightning-pill>
+                                    </span>
+                                </template>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                                <div class="slds-p-bottom_xx-small">
+                                <label>Subject</label>
+                                </div>
+                                <lightning-input name="subject" variant="label-hidden" value={Subject}
+                                    onchange={handleOnChangeAddress}></lightning-input>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" large-device-size="12" padding="around-small">
+                                <div class="slds-p-bottom_xx-small">
+                                <label>Body</label>
+                                </div>
+                                <lightning-input-rich-text value={EmailBody} name="body"
+                                    onchange={handleOnChangeAddress}></lightning-input-rich-text>
+                            </lightning-layout-item>
+
+                        </lightning-layout>
+                        <template for:each={attachments} for:item="item" for:index="index">
+
+                            <div key={item.name} class="slds-box slds-box_xx-small" style="display: inline-block; margin-left: 10px;">                                
+                                <div style="display:flex;gap:10px;">
+                                    <div style="display:flex;gap:2px;">
+                                        <lightning-icon icon-name={item.iconName} alternative-text="Attachment"
+                                        title="Attachment" size="small"></lightning-icon>
+                                        <span class="clickAble_Text">{item.name}</span>
+                                    </div>
+                                
+                                    <lightning-button-icon icon-name="utility:close" variant="bare"
+                                        alternative-text="Remove" data-attachment-index={index}
+                                        onclick={handleRemoveAttachment}></lightning-button-icon>
+                                </div>                                
+                            </div>
+
+
+                        </template>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-end; padding: 10px; width: 100%;">
+                            <lightning-file-upload label="Add Attachments" name="fileUploader"
+                                onuploadfinished={handleUploadFinished} multiple
+                                record-id={recordId}></lightning-file-upload>
+                        </div>
+
+                    <!-- <br>
+                    <div style="float:center;">
+                        <div style="text-align: center;">
+                            <iframe src={iframeUrl} width="90%" height="400px"></iframe>
+                        </div>
+                    </div> -->
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-modal__footer" style="text-align:right;">            
+            
+            <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+                onclick={navigateToRecord}>Cancel</button>
+                <button class="slds-button slds-button_brand" icon-name="utilty:email" onclick={handleSendEmail} disabled={btnDisable}>Send Link</button>
+        </div>
+    </section>
+
+</template>

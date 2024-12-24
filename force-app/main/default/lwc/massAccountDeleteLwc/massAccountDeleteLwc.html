@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Delete Acccount Records" icon-name="standard:account">
+        <div slot="actions">
+            <lightning-button label="Proceed" variant="brand" 
+                              onclick={handleDeleteRecords}>
+            </lightning-button>
+        </div>
+        <div class="slds-align_absolute-center" style="font-size: large;">
+            <b>
+                <h5>You have Selected <u>'{selectedRecords}'</u> Records, Click Proceed to Delete!</h5>
+            </b>
+        </div>
+    </lightning-card>
+</template>

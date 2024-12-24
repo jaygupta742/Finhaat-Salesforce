@@ -1,0 +1,19 @@
+<apex:page standardController="Account" recordSetVar="Account" extensions="changeAccountOwnerController" showHeader="false" sidebar="false">
+    
+    <apex:includeLightning />    
+    <div id="LwcId" />
+    <script>
+    $Lightning.use("c:changeAccountOwner", function() {
+        $Lightning.createComponent("c:changeownerlwc",
+                                   {
+                                       selectedAccounts : '{!selectedIds}',
+                                       sessionKey : '{!sessionId}',
+                                       filterName : '{!filterId}'
+                                   },
+                                   "LwcId", // the Id of div tag where your component will be rendered
+                                   function(cmp) {
+                                       console.log('Calling the LWC Component');
+                                   });
+    });
+    </script>
+</apex:page>

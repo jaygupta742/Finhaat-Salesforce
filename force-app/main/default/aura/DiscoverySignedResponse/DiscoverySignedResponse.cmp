@@ -1,0 +1,5 @@
+<aura:component controller="DiscoverySignedResponse" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	 <aura:handler name="init" value="{!this}" action="{!c.doInit}" />  
+        <lightning:spinner variant="brand" size="medium" /> 
+   
+</aura:component>

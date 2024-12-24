@@ -1,0 +1,9 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+	<lightning:card>
+        <div class="image-container">
+            <img src="{!$Resource.inprogess}" alt="Static Resource Image" class="image-style" />
+        </div>
+    </lightning:card>
+    
+    <c:ticketInProgess recordId="{!v.recordId}"/>
+</aura:component>

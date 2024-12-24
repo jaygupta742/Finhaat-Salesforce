@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnimationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <animationFrequency>always</animationFrequency>
+    <developerName>Wealth_Management_path</developerName>
+    <isActive>true</isActive>
+    <masterLabel>Wealth Management path</masterLabel>
+    <recordTypeContext>Custom</recordTypeContext>
+    <recordTypeName>POS_Wealth_Management</recordTypeName>
+    <sobjectType>Account</sobjectType>
+    <targetField>Stage__c</targetField>
+    <targetFieldChangeToValues>Engaged,Prospect,Confirmed,KYC,Agreement,Payment,Register,Enrolment,Certified</targetFieldChangeToValues>
+</AnimationRule>

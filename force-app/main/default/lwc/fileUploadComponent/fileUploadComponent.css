@@ -1,0 +1,31 @@
+.large-TextArea {
+    --slds-c-textarea-sizing-min-height: 200px;
+}
+
+.align-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.clickAble_Text {
+    cursor: pointer;
+    color: #0176d3;
+    padding: 5px;
+}
+
+.attachment-container {
+    margin: 5px;
+    padding: 5px;
+    border-top: 1px solid #C9C9C9;
+    border-bottom: 1px solid #C9C9C9;
+    background-color: #F3F2F2;
+    width: 100%;
+    display: flex;
+}
+
+.spinnerHolder {
+    align-items: center;
+}
+.custom-textarea {
+    --sds-c-textarea-sizing-min-height:150px;
+}

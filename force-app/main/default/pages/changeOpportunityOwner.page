@@ -1,0 +1,20 @@
+<!-- Create by vishal singh, On 30-04-2024  -->
+<apex:page standardController="Opportunity" recordSetVar="Opportunity" extensions="changeOpportunityOwnerController" showHeader="false" sidebar="false">
+    
+    <apex:includeLightning />    
+    <div id="LwcId" />
+    <script>
+    $Lightning.use("c:changeOpportunityOwner", function() {
+        $Lightning.createComponent("c:changeOpportunityOwnerLWC", 		 
+                                   {
+                                       selectedAccounts : '{!selectedIds}',
+                                       sessionKey : '{!sessionId}',
+                                       filterName : '{!filterId}'
+                                   },
+                                   "LwcId", // the Id of div tag where your component will be rendered
+                                   function(cmp) {
+                                       console.log('Calling the LWC Component');
+                                   });
+    });
+    </script>
+</apex:page>

@@ -1,0 +1,86 @@
+<!-- Created By ahsish Kurzekar on 16.7.24 -->
+<template>
+    <lightning-quick-action-panel header="Create Ticket" >
+    <lightning-record-edit-form object-api-name="Ticket__c" density="comfy">
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item size="6" padding="horizontal-small">
+                <lightning-input-field field-name="Account__c" value={accId} disabled>
+                </lightning-input-field>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" padding="horizontal-small">
+                <lightning-input-field field-name="Stage__c" onchange={handleTicketChange}>
+                </lightning-input-field>
+            </lightning-layout-item><br/>
+            <lightning-layout-item size="12" padding="horizontal-small">
+                <lightning-input-field field-name="text__c" onchange={handleTicketChange} required="true">
+                </lightning-input-field>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-record-edit-form>
+    
+           <!-- <div class="slds-align_absolute-center">
+               <lightning-combobox label="Choose Ticket"
+               value={selectedTicketId} placeholder="Choose Ticket" options={contactOptions}
+               style="width:40%;" onchange={handleContactChange}>
+               </lightning-combobox>
+           </div> -->
+
+           <div class="slds-p-top_small slds-p-bottom_xx-small slds-p-right_medium slds-p-left_medium">
+               <h4>Attachments</h4>
+           </div>
+
+           <div class="slds-p-top_x-small slds-p-bottom_xx-small slds-p-right_medium slds-p-left_medium">
+               <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="Example table of Opportunities with striped rows">
+                   <thead>
+                       <tr class="slds-line-height_reset">
+                           <th class="" scope="col" style="width:15%;">
+                               <div class="slds-truncate">Select</div>
+                           </th>
+                           <th class="" scope="col" style="width:15%;">
+                               <div class="slds-truncate">Type</div>
+                           </th>
+                           <th class="" scope="col" style="width:20%;">
+                               <div class="slds-truncate">Name</div>
+                           </th>
+                           <th class="" scope="col">
+                               <div class="slds-truncate">CreatedBy</div>
+                           </th>
+                           <th class="" scope="col">
+                               <div class="slds-truncate">Last Modified</div>
+                           </th>
+                       </tr>
+                   </thead>
+
+                   <tbody>
+                       <template for:each={conversion} for:item="con">
+                       <tr class="slds-hint-parent" key={con.Id}>                            
+                           <td data-label="Id" style="width:15%;">
+                               <div class="slds-truncate" >
+                                   <input type="checkbox" data-id={con.Id}  onchange={handleRowSelection} />
+                               </div>
+                           </td>
+                           <td data-label="File" style="width:20%;">
+                               <div class="slds-truncate" >
+                                <lightning-icon onclick={previewHandler} data-id={con.contId} icon-name={con.Type} size='small'></lightning-icon>   
+                               </div>
+                           </td>
+                           <td data-label={con.FileName} style="width:15%;">
+                               <div class="slds-truncate" >{con.FileName}</div>
+                           </td>
+                           <td data-label={con.FileName}>
+                               <div class="slds-truncate" >{con.CreatedBy}</div>
+                           </td>
+                           <td data-label={con.FileName}>
+                               <div class="slds-truncate" >{con.LastModified}</div>
+                           </td>
+                       </tr>
+                       </template>
+                   </tbody>
+               </table>
+           </div> 
+    </lightning-quick-action-panel>
+    <div class="slds-modal__footer">
+           <button class="slds-button slds-button_neutral" onclick={cancel}>Cancel</button>
+           <button class="slds-button slds-button_brand" onclick={handleClick} disabled={showButton}>Save</button>
+   </div>
+</template>

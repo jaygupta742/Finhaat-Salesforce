@@ -1,0 +1,18 @@
+<apex:page standardController="Account" recordSetVar="Accounts" extensions="massAccountDeleteClass">
+    <apex:includeLightning />
+    <div id="lightning"> </div>
+    <script>
+    $Lightning.use(
+        "c:massAccountDeleteAura",
+        function() {
+        $Lightning.createComponent(
+            "c:massAccountDeleteLwc",
+            {
+            	recordIds:'{!recordIdList}'
+            },
+            "lightning"
+        );
+    }
+    );
+    </script>
+</apex:page>

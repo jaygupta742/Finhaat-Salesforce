@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>AtachmentName</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AtachmentName</shortDescription>
+        <value>OUT -</value>
+    </labels>
+    <labels>
+        <fullName>AutomatedSchedulerCronEx</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AutomatedSchedulerCronEx</shortDescription>
+        <value>0 0 20 ? * * *</value>
+    </labels>
+    <labels>
+        <fullName>DocReceivedError</fullName>
+        <categories>Use In ACCOUNT Triigger to Validate Document received -all Satge</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>DocReceivedError</shortDescription>
+        <value>Can not change status until all required documents are submitted.</value>
+    </labels>
+    <labels>
+        <fullName>EmaiilScheduledEmail</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EmaiilScheduledEmail</shortDescription>
+        <value>crm@cloudexpertsindia.com,ranjit.sarjine@finhaat.com,arghya.pal@finhaat.com</value>
+    </labels>
+    <labels>
+        <fullName>Finhat_Api_Endpoint</fullName>
+        <categories>old one is  =  https://integration-test.finhaatinsurance.com:9092/</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Finhat Api Endpoint</shortDescription>
+        <value>https://integration.finhaatinsurance.com/</value>
+    </labels>
+    <labels>
+        <fullName>GST_Name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>GST Name</shortDescription>
+        <value>GST</value>
+    </labels>
+    <labels>
+        <fullName>NEFT_Name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NEFT Name</shortDescription>
+        <value>NEFT</value>
+    </labels>
+    <labels>
+        <fullName>Operation_Queue</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Operation_Queue</shortDescription>
+        <value>00GJ4000000IPTHMA4</value>
+    </labels>
+    <labels>
+        <fullName>PAN_Name</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PAN Name</shortDescription>
+        <value>PAN</value>
+    </labels>
+    <labels>
+        <fullName>POS_Agents</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>POS Agents</shortDescription>
+        <value>Finhaat Wealth</value>
+    </labels>
+    <labels>
+        <fullName>POS_Ops</fullName>
+        <categories>Use In sharing component</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>POS Ops</shortDescription>
+        <value>POS Ops</value>
+    </labels>
+    <labels>
+        <fullName>POS_Sales</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>POS Sales</shortDescription>
+        <value>POS Sales</value>
+    </labels>
+    <labels>
+        <fullName>Stage_Lead_Error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage Lead Error</shortDescription>
+        <value>You can&apos;t select Lead</value>
+    </labels>
+    <labels>
+        <fullName>Stage_On_boarding_and_Docs_collected_false</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage On boarding and Docs collected false</shortDescription>
+        <value>All Required Documents Should be Collected</value>
+    </labels>
+    <labels>
+        <fullName>Stage_On_boarding_and_QuoteAcceptedFalse</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage On boarding and QuoteAcceptedFalse</shortDescription>
+        <value>Proposal Documents should be Signed</value>
+    </labels>
+    <labels>
+        <fullName>Stage_Policy_Created_and_Mfi_completed</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage Policy Created and Mfi completed</shortDescription>
+        <value>Mfi Should be Completed</value>
+    </labels>
+    <labels>
+        <fullName>Stage_Quote_Accepted_and_Discovery_docs_signed_false</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage Quote Accepted and Discovery docs signed false</shortDescription>
+        <value>Descovery Docs Should be Signed</value>
+    </labels>
+    <labels>
+        <fullName>Stage_Quote_Accepted_but_Quote_Not_Signed</fullName>
+        <categories>Stage Quote Accepted but Quote Not Signed</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage Quote Accepted but Quote Not Signed</shortDescription>
+        <value>Quote must be Signed</value>
+    </labels>
+    <labels>
+        <fullName>Stage_Rfq_and_Discovery_Docs_signed</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage Rfq and Discovery Docs signed</shortDescription>
+        <value>Discovery Docs Should be Signed</value>
+    </labels>
+    <labels>
+        <fullName>Stage_Training_and_Mfi_Completed</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage Training and Mfi Completed</shortDescription>
+        <value>Mfi Should be completed</value>
+    </labels>
+    <labels>
+        <fullName>Stage_to_Discovery</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage to Discovery</shortDescription>
+        <value>To Change in Discovery Prior Stage Should be Lead</value>
+    </labels>
+    <labels>
+        <fullName>Stage_to_On_Boarding</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage to On Boarding</shortDescription>
+        <value>To Change in On Boarding Prior Stage Should be Quote Accepted</value>
+    </labels>
+    <labels>
+        <fullName>Stage_to_Policy_Created</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Changing Stage to Policy Created</shortDescription>
+        <value>To Change in Policy Created Prior Stage Should be Training</value>
+    </labels>
+    <labels>
+        <fullName>Stage_to_Quote_Accepted</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage to Quote Accepted</shortDescription>
+        <value>To Change in Quote Accepted Prior Stage Should be RFQ</value>
+    </labels>
+    <labels>
+        <fullName>Stage_to_RFQ</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage to RFQ</shortDescription>
+        <value>To Change in RFQ Prior Stage Should be Discovery</value>
+    </labels>
+    <labels>
+        <fullName>Stage_to_Training</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stage to Training</shortDescription>
+        <value>To Change in Training Prior Stage Should be On Boarding</value>
+    </labels>
+    <labels>
+        <fullName>System_Admin</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>System Admin</shortDescription>
+        <value>System Administrator</value>
+    </labels>
+    <labels>
+        <fullName>Whatsera_Send_Sms</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Whatsera Send Sms Accesstoken</shortDescription>
+        <value>65d4491e913949c6cd70b9f6</value>
+    </labels>
+    <labels>
+        <fullName>Whatsera_Send_Sms_EndPoint</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Whatsera Send Sms EndPoint</shortDescription>
+        <value>https://app.whatsera.com</value>
+    </labels>
+</CustomLabels>

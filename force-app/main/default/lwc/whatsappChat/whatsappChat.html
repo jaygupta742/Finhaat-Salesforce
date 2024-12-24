@@ -1,0 +1,201 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-modal__content container">
+        
+        <div class="Chat-Container" style={contStyle}>
+            <section role="log" class="slds-chat">
+                <ul class="slds-chat-list" if:true={lstWAMessages}>
+                    <template for:each={lstWAMessages} for:item="item">
+                        <li class="slds-chat-listitem slds-chat-listitem_inbound" key={item} if:true={item.inbound}>
+                            <div class="slds-chat-message" style="width: 100%;" ondblclick={handleClickReplyMessage} data-name={item.name} data-id={item.Id} data-message={item.message}>
+                                <span aria-hidden="true" class="slds-avatar slds-avatar_circle slds-chat-avatar">
+                                    <abbr class="slds-avatar__initials slds-avatar__initials_inverse" ondblclick={handleClickReplyMessage} data-name={item.name} data-id={item.Id} data-message={item.message} title="Andy Martinez">{ChatMeta.shortName}</abbr>
+                                </span>
+                                <div class="slds-chat-message__body" style="width: 100%;"  >
+                                    <div class="slds-chat-message__text slds-chat-message__text_inbound" style="background-color: #ffffff; width:80%" ondblclick={handleClickReplyMessage} data-name={item.name} data-id={item.Id} data-message={item.message}>
+                                        <span style="color: black;" >{item.message}</span>
+                                        <br>
+                                        <ul class="slds-chat-list" if:true={item.mediaMsg} for:each={item.files} for:item="files" key={files.Id}>
+                                            <li class="slds-chat-listitem slds-chat-listitem_inbound" style="width: 100%;">
+                                                <div class="slds-chat-message">
+                                                    <div class="slds-chat-message__body">
+                                                        <div class="slds-chat-message__text slds-chat-message__text_inbound">
+                                                            <div style="display: flex; flex-direction: row; align-items: center;">
+                                                                <lightning-icon icon-name='doctype:attachment' alternative-text='attachment' class="slds-m-right_xx-small" data-id={files.Id} onclick={previewHandler}></lightning-icon>
+                                                                <span class="Clickable-Text" data-id={files.Id} onclick={previewHandler}>{files.Title}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="slds-chat-message__meta" style="text-align: right;" ondblclick={handleClickReplyMessage} data-name={item.name} data-id={item.Id} data-message={item.message}>
+                                            <lightning-formatted-date-time value={item.chatDateTime} year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="slds-chat-listitem slds-chat-listitem_outbound" key={item} if:false={item.inbound}>
+                            <div class="slds-chat-message" style="width: 100%;" >
+                                <div class="slds-chat-message__body" style="width: 100%;">
+                                    <div class="slds-chat-message__text slds-chat-message__text_outbound-agent" style="background-color: #d9fdd2; width:80%" data-message={item.message} ondblclick={handleGreenclick} data-name="You" data-id={item.Id}>
+                                        <span style="color: black;">{item.message}</span>
+
+                                        <ul class="slds-chat-list" if:true={item.mediaMsg} for:each={item.files} for:item="files" key={files.Id}>
+                                            <li class="slds-chat-listitem slds-chat-listitem_inbound" data-title={files.Title} data-name="You" data-fileid={files.Id} data-preview="yes" ondblclick={handlePreviewFile}>
+                                                <div class="slds-chat-message">
+                                                    <div class="slds-chat-message__body">
+                                                        <div class="slds-chat-message__text slds-chat-message__text_outbound" style="background-color: #a6e19a; width: 100%;">
+                                                            <div style="display: flex; flex-direction: row; align-items: center;">
+                                                                <lightning-icon icon-name='doctype:attachment' alternative-text='attachment' class="slds-m-right_xx-small" data-id={files.Id} onclick={HandlePreviewAttachment}></lightning-icon>
+                                                                <span class="Clickable-Text" data-id={files.Id} onclick={HandlePreviewAttachment}>{files.Title}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="slds-chat-message__meta" style="text-align: right;">
+                                            <lightning-formatted-date-time value={item.chatDateTime} year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit"></lightning-formatted-date-time> · 
+                                            {item.createdBy}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </template>
+                </ul>
+            </section>
+        </div>
+
+        <div class="slds-p-around_xx-small">
+            <div if:true={FileUploadMeta} class="slds-m-top_xx-small">
+                <template for:each={FileUploadMeta.Files} for:item="item" for:index="index">
+                    <span key={item.name}>
+                        <lightning-pill label={item.name} has-error={item.has_error} data-index={index} onremove={HandleRemoveFiles}>
+                            <lightning-icon icon-name="doctype:attachment" alternative-text="file"></lightning-icon>
+                        </lightning-pill>
+                        <lightning-helptext if:true={item.has_error} content={item.error_message}></lightning-helptext>
+                    </span>
+                </template>
+            </div>
+
+            <template if:true={doubleClickMessage}>
+                <div style="display:flex;gap:15px;">
+                    <div class="task-box slds-box slds-theme_shade" style={cssStyle}>
+                        <div class="slds-text-color_error" style={headerColor}>
+                            <strong>{sname}</strong>
+                        </div>
+                        <div class="task-body">
+                            <!--div class="task-title">
+                                Task 2 Add on [24/08/2024 11:35]
+                            </div-->
+                            <div class="task-description">
+                                {showMessage}
+                            </div>
+                        </div>
+                        <!--div style="margin-left: auto;" class="slds-float_right">
+                            <img src={imageUrl} alt={cvId} style="width: 60px; height: 60px; border-radius: 8px;" />
+                        </div-->
+                    </div>
+
+                    <div class="slds-p-top_large">
+                        <lightning-icon size="small" icon-name="utility:close" alternative-text="Close" class="slds-icon slds-icon_x-small" onclick={handleClose}></lightning-icon>
+                    </div>
+                </div>
+            </template>
+
+            <div class="slds-form-element" data-id="selectTemplate" style="margin-top:5px;">
+                 <div class="slds-form-element__control" style="display:flex;gap:62px;">
+                    <div class="slds-select_container" style="width: 80%;">
+                        <select class="slds-select" id="select-Template" 
+                             onchange={onSelectEmailTemplate}>
+                            <option value="">--None--</option>
+                            <template for:each={emailTemplateList} for:item="template">
+                            <option key={template.Id} value={template.Name}>{template.Name}</option>
+                            </template> 
+                        </select>
+
+                        
+                    </div>
+                    <div>
+                            <lightning-button-icon icon-name="utility:refresh" size="medium" alternative-text="Refresh" class="slds-m-left_xx-small" onclick={refreshComponent}></lightning-button-icon>
+                        </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                
+                <div style="width: 80%;height:30%;">
+                    <lightning-textarea placeholder="Type a message" variant="label-hidden" class="slds-p-top_xx-small" style={txtareaStyle} onchange={handleMessage} value={message}></lightning-textarea>
+                </div>
+                <div class="menu-container">
+                    <div class="slds-p-right_x-small">
+                        <lightning-button-icon icon-name="utility:add" variant="border-filled" alternative-text="Add Items" class="Action-Button" onclick={HandleClickMenu}></lightning-button-icon>
+                    </div>
+                    <div class="menu" if:true={isMenuVisible}>
+                        <div class="menu-item" >
+                            <input type="file" id="fileInput" accept={AcceptedFormats} multiple style="display: none;" onchange={HandleFileChange}>
+                            <!-- <lightning-file-upload label="Upload Files" name="fileUploader" accept={AcceptedFormats} onuploadfinished={handleUploadFinished} style="display: none;" ></lightning-file-upload> -->
+                            <lightning-icon icon-name="standard:file" alternative-text="Add Attachments" title="Add Attachments" size="small" ></lightning-icon>
+                            <span class="slds-m-horizontal_x-small" data-event="add-attachments" onclick={HandleClickMenuItem}>Upload Files</span>
+                        </div>
+                        <!--<div class="menu-item" data-event="add-template" onclick={HandleClickMenuItem}>
+                            <lightning-icon icon-name="standard:template" alternative-text="Add Template" title="Add Template" size="small"></lightning-icon>
+                            <span class="slds-m-horizontal_x-small">Templates</span>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="slds-p-right_x-small" if:true={SendMessage_status}>
+                <lightning-button-icon icon-name="utility:send" variant="brand" alternative-text="Send Chat" class="Action-Button" onclick={HandleSendMessage} if:true={SendMessage_status}></lightning-button-icon>
+                </div>
+                <!-- <lightning-icon icon-name="action:back" alternative-text="Send" title="Send" size="x-small" onclick={sendmessage} style={sendMessageStyle}></lightning-icon> -->
+                <div style="position: relative; height: 33px; width: 33px; border-radius: 50%; background-color: #0176d3; " if:true={SendMessage_Spinner_status} >
+                    <lightning-spinner alternative-text="Loading" size="xx-small" variant="brand"></lightning-spinner>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template if:true={PreviewTemplates}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open slds-modal_medium">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                    <lightning-button-icon icon-name="utility:close" variant="border-inverse" alternative-text="Close Modal" onclick={HandleCancelInsertTemplate}></lightning-button-icon>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 class="slds-modal__title slds-hyphenate">Insert Template</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="spinner-container" if:true={TemplateMeta.spinner_flag}>
+                        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+                        <p class="slds-align_absolute-center slds-text-heading_medium slds-text-link">Sending... Please Wait...</p>
+                    </div>
+                    <div style="width: 100%; display: flex; flex-direction: row;" if:false={TemplateMeta.spinner_flag}>
+                        <div style="width: 30%; min-height: 225px; max-height: 300px;" class="slds-scrollable_y slds-theme_alt-inverse">
+                            <lightning-vertical-navigation onselect={HandleSelectTemplate}>
+                                <lightning-vertical-navigation-section label="Templates">
+                                    <template for:each={lstWATemplates} for:item="item">
+                                        <lightning-vertical-navigation-item key={item.Id} label={item.Name} name={item.Id}></lightning-vertical-navigation-item>
+                                    </template>
+                                </lightning-vertical-navigation-section>
+                            </lightning-vertical-navigation>
+                        </div>
+                        <div style="width: 70%; min-height: 225px; max-height: 300px;" class="slds-theme_alert-texture slds-p-around_large slds-scrollable_y">
+                            <!-- <lightning-formatted-text if:true={SelectedTemplate} value={SelectedTemplate.Text__c}></lightning-formatted-text> -->
+                            <lightning-textarea name="input1" class="Template-TextArea" label="Enter some text" variant="label-hidden" value={message} onchange={handleMessage}></lightning-textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={HandleCancelInsertTemplate} disabled={TemplateMeta.spinner_flag}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={HandleSendTemplate} disabled={TemplateMeta.spinner_flag}>Send Template</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>
