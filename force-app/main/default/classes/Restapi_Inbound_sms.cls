@@ -180,6 +180,10 @@ Global without sharing class Restapi_Inbound_sms{
         return phoneNumber;
     }
 
+    public static void testing(){
+        system.debug('hello');
+    }
+
     public static String mapMimeTypes(String fileType){
         map<String, String> mimeTypeMap = new map<String, String>();
         if ( fileType == 'image/png' )
